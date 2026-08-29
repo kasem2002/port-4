@@ -1,6 +1,7 @@
 import { useContent, useT } from '../hooks/useLocalized.js';
 import LangToggle from './LangToggle.jsx';
 import Logo from './Logo.jsx';
+import SocialIcon from './SocialIcon.jsx';
 
 export default function Footer() {
   const t = useT();
@@ -24,9 +25,16 @@ export default function Footer() {
                 <a
                   key={i}
                   href={s.href}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-ink-900/10 text-[11px] font-mono uppercase tracking-[0.14em] text-ink-800 hover:bg-ink-950 hover:text-paper-50 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={l(s.label)}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-ink-900/10 text-ink-800 hover:bg-ink-950 hover:text-paper-50 transition-colors"
                 >
-                  {s.abbr}
+                  <SocialIcon
+                    icon={s.icon}
+                    className="h-4 w-4"
+                    fallback={<span className="text-[11px] font-mono uppercase tracking-[0.14em]">{s.abbr}</span>}
+                  />
                 </a>
               ))}
             </div>

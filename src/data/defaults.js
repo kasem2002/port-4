@@ -14,10 +14,10 @@ export const defaultContent = {
     phone: '+00 000 000 000',
     location: L('Remote · Distributed', 'فريق موزَّع · عن بُعد'),
     social: [
-      { label: L('GitHub', 'جيت هَب'), href: '#', abbr: 'GH' },
-      { label: L('LinkedIn', 'لينكدإن'), href: '#', abbr: 'IN' },
-      { label: L('X', 'إكس'), href: '#', abbr: 'X' },
-      { label: L('Dribbble', 'دريبل'), href: '#', abbr: 'DR' },
+      { icon: 'github', label: L('GitHub', 'جيت هَب'), href: 'https://github.com/', abbr: 'GH' },
+      { icon: 'linkedin', label: L('LinkedIn', 'لينكدإن'), href: 'https://linkedin.com/', abbr: 'IN' },
+      { icon: 'x', label: L('X', 'إكس'), href: 'https://x.com/', abbr: 'X' },
+      { icon: 'dribbble', label: L('Dribbble', 'دريبل'), href: 'https://dribbble.com/', abbr: 'DR' },
     ],
     languages: ['EN', 'AR'],
   },
@@ -514,6 +514,22 @@ export const defaultContent = {
       'لديك فكرة مشروع؟||لنُطوّرها||معًا.',
     ),
     accentLine: 1,
+    blurb: L(
+      "We reply to every project inquiry within 24 hours on weekdays. Tell us what you're building — we'll be honest about whether we're the right team for it.",
+      'نردّ على كل استفسار مشروع خلال ٢٤ ساعة في أيام العمل. أخبرنا بما تعمل على بنائه، وسنكون صريحين معك حول ما إذا كنّا الفريق المناسب لمشروعك.',
+    ),
+    formIntro: L('New project · brief', 'مشروع جديد · موجز'),
+    formEncrypted: L('encrypted', 'مُشفَّر'),
+    submitLabel: L('Start your project', 'ابدأ مشروعك'),
+    submitSending: L('Sending…', 'جارٍ الإرسال…'),
+    privacyNote: L(
+      "By submitting, you agree to be contacted about your inquiry. We don't sell data, ever.",
+      'بإرسال هذا النموذج، أنت توافق على تواصلنا معك بشأن استفسارك. لا نبيع بياناتك مطلقًا.',
+    ),
+    successMessage: L(
+      "✓ Message received. We'll reply within one business day.",
+      '✓ تم استلام رسالتك. سنرد عليك خلال يوم عمل واحد.',
+    ),
     projectTypes: [
       L('Web platform', 'منصة ويب'),
       L('Mobile app', 'تطبيق هاتف'),

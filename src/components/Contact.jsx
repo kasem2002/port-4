@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { updateField, setStatus, resetForm } from '../store/contactSlice.js';
 import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
+import SocialIcon from './SocialIcon.jsx';
 
 export default function Contact() {
   const form = useSelector((s) => s.contact.form);
@@ -62,7 +63,7 @@ export default function Contact() {
             </h2>
 
             <p className="mt-8 text-[16px] leading-relaxed text-paper-50/75 max-w-md">
-              {t('contact.blurb')}
+              {l(contact.blurb)}
             </p>
 
             <div className="mt-10 space-y-5">
@@ -76,9 +77,19 @@ export default function Contact() {
                 <a
                   key={i}
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm hover:border-brand-orange hover:text-brand-orange transition-colors"
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-50/60 group-hover:text-brand-orange">{s.abbr}</span>
+                  <SocialIcon
+                    icon={s.icon}
+                    className="h-4 w-4 text-paper-50/70 group-hover:text-brand-orange transition-colors"
+                    fallback={
+                      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-50/60 group-hover:text-brand-orange">
+                        {s.abbr}
+                      </span>
+                    }
+                  />
                   {l(s.label)}
                 </a>
               ))}
@@ -92,10 +103,10 @@ export default function Contact() {
             >
               <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-8">
                 <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-paper-50/50">
-                  {t('contact.newProject')}
+                  {l(contact.formIntro)}
                 </p>
                 <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-brand-green">
-                  {t('contact.encrypted')}
+                  {l(contact.formEncrypted)}
                 </p>
               </div>
 
@@ -182,14 +193,14 @@ export default function Contact() {
 
               <div className="mt-8 flex flex-wrap items-center gap-4 justify-between">
                 <p className="text-[12.5px] text-paper-50/50 max-w-md">
-                  {t('contact.privacy')}
+                  {l(contact.privacyNote)}
                 </p>
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
                   className="group inline-flex items-center gap-3 rounded-full bg-brand-orange text-paper-50 ltr:pl-5 ltr:pr-2 rtl:pr-5 rtl:pl-2 py-2 text-sm font-medium hover:bg-paper-50 hover:text-ink-950 transition-colors disabled:opacity-60"
                 >
-                  {status === 'submitting' ? t('contact.sending') : t('contact.submit')}
+                  {status === 'submitting' ? l(contact.submitSending) : l(contact.submitLabel)}
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-ink-950 text-paper-50 transition-colors group-hover:bg-brand-orange">
                     <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 rtl:-scale-x-100" fill="none" stroke="currentColor" strokeWidth="1.6">
                       <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
@@ -206,7 +217,7 @@ export default function Contact() {
                     exit={{ opacity: 0 }}
                     className="mt-6 rounded-xl border border-brand-green/40 bg-brand-green/10 px-4 py-3 text-[13.5px] text-paper-50"
                   >
-                    {t('contact.success')}
+                    {l(contact.successMessage)}
                   </motion.div>
                 )}
               </AnimatePresence>
