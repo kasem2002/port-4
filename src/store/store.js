@@ -3,6 +3,7 @@ import uiReducer from './uiSlice.js';
 import servicesReducer from './servicesSlice.js';
 import contactReducer from './contactSlice.js';
 import contentReducer from './contentSlice.js';
+import publishedReducer from './publishedSlice.js';
 import i18nReducer from './i18nSlice.js';
 import authReducer from './authSlice.js';
 import discoveryReducer from '../discovery/store/discoverySlice.js';
@@ -15,6 +16,7 @@ export const store = configureStore({
     services: servicesReducer,
     contact: contactReducer,
     content: contentReducer,
+    published: publishedReducer,
     i18n: i18nReducer,
     auth: authReducer,
     discovery: discoveryReducer,

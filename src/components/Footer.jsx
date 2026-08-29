@@ -1,14 +1,14 @@
-import { useContent, useT } from '../hooks/useLocalized.js';
+import { usePublicContent, useT } from '../hooks/useLocalized.js';
 import LangToggle from './LangToggle.jsx';
 import Logo from './Logo.jsx';
 import SocialIcon from './SocialIcon.jsx';
 
 export default function Footer() {
   const t = useT();
-  const { data: brand, l } = useContent('brand');
-  const { data: nav } = useContent('nav');
-  const { data: services } = useContent('services');
-  const { data: footer } = useContent('footer');
+  const { data: brand, l } = usePublicContent('brand');
+  const { data: nav } = usePublicContent('nav');
+  const { data: services } = usePublicContent('services');
+  const { data: footer } = usePublicContent('footer');
   const year = new Date().getFullYear();
 
   return (

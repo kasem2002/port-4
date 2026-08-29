@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import HeroVisual from './HeroVisual.jsx';
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 
 const stagger = {
   animate: { transition: { staggerChildren: 0.08, delayChildren: 1.7 } },
@@ -11,7 +11,7 @@ const rise = {
 };
 
 export default function Hero() {
-  const { l, data: hero } = useContent('hero');
+  const { l, data: hero } = usePublicContent('hero');
   const t = useT();
   const parts = splitHeadline(l(hero.headline));
   const accent = hero.accentLine ?? -1;

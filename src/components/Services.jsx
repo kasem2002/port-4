@@ -1,13 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveService } from '../store/servicesSlice.js';
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 
 export default function Services() {
   const active = useSelector((s) => s.services.activeIndex);
   const dispatch = useDispatch();
-  const { data: services, l } = useContent('services');
+  const { data: services, l } = usePublicContent('services');
   const t = useT();
   const items = services.items;
   const activeIndex = Math.min(active, items.length - 1);

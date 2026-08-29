@@ -1,8 +1,8 @@
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 
 export default function Journal() {
-  const { data: journal, l } = useContent('journal');
+  const { data: journal, l } = usePublicContent('journal');
   const t = useT();
   const items = journal.items || [];
   const featured = items.find((a) => a.featured) || items[0];

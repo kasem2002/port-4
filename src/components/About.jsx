@@ -1,8 +1,8 @@
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 
 export default function About() {
-  const { data: about, l } = useContent('about');
+  const { data: about, l } = usePublicContent('about');
   const t = useT();
   const parts = splitHeadline(l(about.heading));
   const accent = about.accentLine ?? -1;

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { updateField, setStatus, resetForm } from '../store/contactSlice.js';
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 import SocialIcon from './SocialIcon.jsx';
 
@@ -10,8 +10,8 @@ export default function Contact() {
   const status = useSelector((s) => s.contact.status);
   const dispatch = useDispatch();
   const t = useT();
-  const { data: contact, l } = useContent('contact');
-  const { data: brand } = useContent('brand');
+  const { data: contact, l } = usePublicContent('contact');
+  const { data: brand } = usePublicContent('brand');
   const parts = splitHeadline(l(contact.heading));
   const accent = contact.accentLine ?? -1;
 

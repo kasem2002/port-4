@@ -1,7 +1,7 @@
-import { useContent } from '../hooks/useLocalized.js';
+import { usePublicContent } from '../hooks/useLocalized.js';
 
 export default function Marquee() {
-  const { data: words, l } = useContent('marquee');
+  const { data: words, l } = usePublicContent('marquee');
   const line = [...words, ...words];
   return (
     <section aria-hidden="true" className="border-y border-ink-900/10 bg-paper-100/60 py-6 overflow-hidden">

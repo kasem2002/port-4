@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toggleMobileMenu, closeMobileMenu } from '../store/uiSlice.js';
-import { useContent, useT, useL, useLang } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, useL, useLang } from '../hooks/useLocalized.js';
 import Logo from './Logo.jsx';
 import LangToggle from './LangToggle.jsx';
 
@@ -11,8 +11,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const dispatch = useDispatch();
   const open = useSelector((s) => s.ui.mobileMenuOpen);
-  const { data: nav } = useContent('nav');
-  const { data: brand } = useContent('brand');
+  const { data: nav } = usePublicContent('nav');
+  const { data: brand } = usePublicContent('brand');
   const t = useT();
   const l = useL();
   const lang = useLang();

@@ -22,9 +22,21 @@ export function useL() {
   return (value) => pick(value, lang);
 }
 
-// Hook: pull content section from Redux with a localizer helper.
+// Draft content — used by dashboard editors.
 export function useContent(section) {
   const data = useSelector((s) => (section ? s.content[section] : s.content));
+  const lang = useLang();
+  return { data, lang, l: (v) => pick(v, lang) };
+}
+
+// Published content — used by every public site component.
+// Falls back to draft if published is missing (defensive; hydration should
+// always seed it).
+export function usePublicContent(section) {
+  const data = useSelector((s) => {
+    const source = s.published || s.content;
+    return section ? source[section] : source;
+  });
   const lang = useLang();
   return { data, lang, l: (v) => pick(v, lang) };
 }

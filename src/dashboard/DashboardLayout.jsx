@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice.js';
 import { resetAll } from '../store/contentSlice.js';
+import { publish } from '../store/publishedSlice.js';
 import { setLang } from '../store/i18nSlice.js';
 import { useT, useLang } from '../hooks/useLocalized.js';
 import Logo from '../components/Logo.jsx';
@@ -28,19 +29,27 @@ export default function DashboardLayout({ children }) {
   const dispatch = useDispatch();
   const t = useT();
   const lang = useLang();
-  const [savedTick, setSavedTick] = useState(false);
-  const location = useLocation();
+  const draft = useSelector((s) => s.content);
+  const published = useSelector((s) => s.published);
+  const [justSaved, setJustSaved] = useState(false);
 
-  // A soft "saved" pip that flashes when the pathname or state serialization changes.
-  // (We piggy-back on any route change; every Redux edit is already auto-persisted.)
-  useSelector((s) => s.content); // force subscription
-  useSelector((s) => s.i18n.lang);
+  // Dirty state: draft differs from what's published to the public site.
+  // Stringify comparison is fine here — dashboard is not perf-critical, and
+  // both slices are small JSON trees.
+  const isDirty = useMemo(
+    () => JSON.stringify(draft) !== JSON.stringify(published),
+    [draft, published],
+  );
 
-  const doReset = () => {
+  const onSave = () => {
+    dispatch(publish(draft));
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 1500);
+  };
+
+  const onReset = () => {
     if (window.confirm(t('dash.confirmReset'))) {
       dispatch(resetAll());
-      setSavedTick(true);
-      setTimeout(() => setSavedTick(false), 1200);
     }
   };
 
@@ -48,19 +57,18 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-paper-100/70 text-ink-900" dir="ltr">
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-paper-50/80 backdrop-blur border-b border-ink-900/10">
-        <div className="mx-auto max-w-[1400px] px-4 md:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <header className="sticky top-0 z-30 bg-paper-50/85 backdrop-blur border-b border-ink-900/10">
+        <div className="mx-auto max-w-[1400px] px-4 md:px-6 h-14 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-4 min-w-0">
             <Link to="/dashboard" className="flex items-center gap-2">
               <Logo />
             </Link>
-            <span className="hidden md:inline font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-500">
+            <span className="hidden md:inline font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-500 truncate">
               / {t('dash.brand')}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <SavePip />
+            <SaveStatus isDirty={isDirty} justSaved={justSaved} />
             <div className="hidden md:inline-flex items-center gap-0.5 rounded-full border border-ink-900/10 bg-paper-50 p-0.5">
               {['en', 'ar'].map((l) => (
                 <button
@@ -75,7 +83,31 @@ export default function DashboardLayout({ children }) {
               ))}
             </div>
             <button
-              onClick={doReset}
+              type="button"
+              onClick={onSave}
+              disabled={!isDirty}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[12.5px] font-medium transition-all ${
+                isDirty
+                  ? 'bg-brand-orange text-paper-50 hover:bg-ink-950 shadow-soft'
+                  : 'bg-ink-900/8 text-ink-500 cursor-default'
+              }`}
+              title={isDirty ? 'Publish draft to the public site' : 'No pending changes'}
+            >
+              {justSaved ? (
+                <>
+                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <path d="M3 8.5l3.5 3.5L13 4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Saved
+                </>
+              ) : (
+                <>
+                  {isDirty ? 'Save changes' : 'All saved'}
+                </>
+              )}
+            </button>
+            <button
+              onClick={onReset}
               className="hidden md:inline text-[12.5px] text-ink-600 hover:text-red-700 transition-colors px-2 py-1"
             >
               {t('dash.reset')}
@@ -97,7 +129,6 @@ export default function DashboardLayout({ children }) {
       </header>
 
       <div className="mx-auto max-w-[1400px] px-4 md:px-6 py-6 md:py-8 grid grid-cols-12 gap-6">
-        {/* Sidebar */}
         <aside className="col-span-12 md:col-span-3 lg:col-span-2">
           <nav className="sticky top-20 space-y-6">
             {groups.map((g) => (
@@ -127,7 +158,6 @@ export default function DashboardLayout({ children }) {
           </nav>
         </aside>
 
-        {/* Main */}
         <main className="col-span-12 md:col-span-9 lg:col-span-10 min-w-0">
           {children}
         </main>
@@ -136,13 +166,23 @@ export default function DashboardLayout({ children }) {
   );
 }
 
-// Small "saved locally" pip.
-function SavePip() {
-  const t = useT();
+// Left-of-Save pill: shows "Draft" while dirty, "Live" when in sync.
+function SaveStatus({ isDirty, justSaved }) {
+  if (justSaved) return null;
   return (
-    <span className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.16em]">
-      <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-      {t('dash.saved')}
+    <span
+      className={`hidden md:inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.16em] ${
+        isDirty
+          ? 'border-brand-orange/40 bg-brand-orange/10 text-brand-orange'
+          : 'border-brand-green/30 bg-brand-green/10 text-brand-green'
+      }`}
+    >
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${
+          isDirty ? 'bg-brand-orange animate-pulse' : 'bg-brand-green'
+        }`}
+      />
+      {isDirty ? 'Draft — not saved' : 'Live'}
     </span>
   );
 }

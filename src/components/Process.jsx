@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 
 export default function Process() {
-  const { data: process, l } = useContent('process');
+  const { data: process, l } = usePublicContent('process');
   const t = useT();
   const parts = splitHeadline(l(process.heading));
   const accent = process.accentLine ?? -1;

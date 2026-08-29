@@ -1,9 +1,9 @@
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 import CountUp from './CountUp.jsx';
 
 export default function Stats() {
-  const { data: trust, l } = useContent('trust');
+  const { data: trust, l } = usePublicContent('trust');
   const t = useT();
   const parts = splitHeadline(l(trust.heading));
   const accent = trust.accentLine ?? -1;

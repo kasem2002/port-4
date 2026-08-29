@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 import ProjectVisual from './ProjectVisual.jsx';
 
 export default function Projects() {
-  const { data: projects, l } = useContent('projects');
+  const { data: projects, l } = usePublicContent('projects');
   const t = useT();
   const parts = splitHeadline(l(projects.heading));
   const accent = projects.accentLine ?? -1;

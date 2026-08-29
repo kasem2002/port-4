@@ -1,4 +1,4 @@
-import { useContent, useT, splitHeadline } from '../hooks/useLocalized.js';
+import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 import PartnerLogo from './PartnerLogo.jsx';
 
@@ -11,7 +11,7 @@ function normalize(item) {
 }
 
 export default function Partners() {
-  const { data: partners, l } = useContent('partners');
+  const { data: partners, l } = usePublicContent('partners');
   const t = useT();
   const parts = splitHeadline(l(partners.heading));
   const accent = partners.accentLine ?? -1;
