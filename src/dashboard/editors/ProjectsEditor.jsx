@@ -1,11 +1,13 @@
 import { useSelector } from 'react-redux';
 import { Panel, LocalizedText, LocalizedArea, TextField, Segmented, CommaList, ListEditor, useBind, useItemUpdater } from '../fields.jsx';
+import MediaUploader from '../MediaUploader.jsx';
+import ProjectImage from '../../components/ProjectImage.jsx';
 
-const PROJECT_IDS = [
-  { value: 'northline', label: 'Northline visual' },
-  { value: 'ember', label: 'Ember visual' },
-  { value: 'kiln', label: 'Kiln visual' },
-  { value: 'atlas', label: 'Atlas visual' },
+const FALLBACK_VISUALS = [
+  { value: 'northline', label: 'Northline' },
+  { value: 'ember', label: 'Ember' },
+  { value: 'kiln', label: 'Kiln' },
+  { value: 'atlas', label: 'Atlas' },
 ];
 
 export default function ProjectsEditor() {
@@ -26,13 +28,15 @@ export default function ProjectsEditor() {
         <LocalizedArea label="Blurb" value={projects.blurb} onChange={(v) => bind.set('blurb', v)} rows={3} />
       </Panel>
 
-      <Panel title="Projects" description="Each project can pick one of the built-in abstract visuals via its ID.">
+      <Panel title="Projects" description="Upload a screenshot for each project — or leave it blank to keep the built-in illustrated visual selected under 'fallback visual'.">
         <ListEditor
           path="projects.items"
           items={projects.items}
+          addLabel="Add project"
           itemLabel={(i) => projects.items[i]?.name?.en || `Project ${i + 1}`}
           makeEmpty={() => ({
             id: 'northline',
+            image: '',
             index: '',
             year: '2026',
             name: { en: 'New project', ar: '' },
@@ -43,11 +47,25 @@ export default function ProjectsEditor() {
           })}
           renderItem={(item, i) => (
             <>
+              <MediaUploader
+                label="Project image"
+                hint="upload PNG/SVG/JPG (up to 400 KB), or paste an image URL"
+                value={item.image}
+                onChange={(v) => setItem(i, 'image', v)}
+                uploadLabel="Upload image"
+                previewClassName="grid h-20 w-32 place-items-center rounded overflow-hidden relative bg-paper-100"
+                preview={(v) => (
+                  <div className="relative w-full h-full">
+                    <ProjectImage image={v} fallbackId={item.id} alt="Preview" />
+                  </div>
+                )}
+              />
+
               <Segmented
-                label="Visual (ID)"
+                label="Fallback visual (used when no image is uploaded)"
                 value={item.id}
                 onChange={(v) => setItem(i, 'id', v)}
-                options={PROJECT_IDS}
+                options={FALLBACK_VISUALS}
               />
               <TextField label='Index (e.g. "01 / 06")' value={item.index} onChange={(v) => setItem(i, 'index', v)} />
               <TextField label="Year" value={item.year} onChange={(v) => setItem(i, 'year', v)} />

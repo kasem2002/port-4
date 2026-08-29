@@ -113,6 +113,13 @@
   .partner-logo-svg svg { max-height: 3rem; }
 }
 
+/* Project-image container — pasted SVGs fill the whole aspect-[5/4] box. */
+.project-image-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 /* Custom scrollbar (subtle) */
 ::-webkit-scrollbar {
   width: 10px;

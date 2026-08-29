@@ -377,6 +377,7 @@ export const defaultContent = {
           '38% faster case resolution, single sign-on across all teams.',
           'حلّ الحالات بسرعة أكبر بنسبة ٣٨٪، مع تسجيل دخول موحّد لجميع الفرق.',
         ),
+        image: '',
         stack: ['React', 'Node', 'Postgres', 'AWS'],
       },
       {
@@ -391,6 +392,7 @@ export const defaultContent = {
           '4.8 App Store rating within eight weeks of launch.',
           'تقييم ٤٫٨ على متجر App Store خلال ثمانية أسابيع من الإطلاق.',
         ),
+        image: '',
         stack: ['React Native', 'Expo', 'Node', 'GraphQL'],
       },
       {
@@ -405,6 +407,7 @@ export const defaultContent = {
           '2.1× conversion, sub-1s LCP on mobile.',
           'زيادة نسبة التحويل ٢٫١ مرات، وسرعة تحميل أقل من ثانية على الهاتف.',
         ),
+        image: '',
         stack: ['Next.js', 'Shopify', 'Sanity', 'Vercel'],
       },
       {
@@ -419,6 +422,7 @@ export const defaultContent = {
           '~$180K/yr saved in tooling and manual dispatch time.',
           'توفير نحو ١٨٠ ألف دولار سنويًا في تكاليف الأدوات وساعات العمل اليدوي.',
         ),
+        image: '',
         stack: ['React', 'Go', 'Postgres', 'MapLibre'],
       },
     ],

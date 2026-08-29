@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { usePublicContent, useT, splitHeadline } from '../hooks/useLocalized.js';
 import Reveal from './Reveal.jsx';
 import ProjectVisual from './ProjectVisual.jsx';
+import ProjectImage from './ProjectImage.jsx';
 
 export default function Projects() {
   const { data: projects, l } = usePublicContent('projects');
@@ -47,7 +48,7 @@ export default function Projects() {
                     className={`col-span-12 lg:col-span-7 ${alignRight ? 'lg:order-2' : ''}`}
                   >
                     <div className="relative rounded-2xl overflow-hidden border border-ink-900/10 shadow-panel aspect-[5/4] group">
-                      <ProjectVisual id={p.id} className="absolute inset-0" />
+                      <ProjectImage image={p.image} fallbackId={p.id} alt={l(p.name)} />
                       <div className="absolute inset-0 bg-gradient-to-t from-ink-950/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <span className="absolute top-4 ltr:left-4 rtl:right-4 chip bg-paper-50/95">
                         {l(p.category)}

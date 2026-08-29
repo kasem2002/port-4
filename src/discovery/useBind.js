@@ -5,7 +5,7 @@ import { setField, toggleArrayField, clearError } from './store/discoverySlice.j
 export function useField(path) {
   return useSelector((s) => {
     const keys = path.split('.');
-    let cur = s.discovery.form;
+    let cur = s.discovery?.form;
     for (const k of keys) {
       if (cur == null) return undefined;
       cur = cur[k];
@@ -30,9 +30,9 @@ export function useBind() {
 }
 
 export function useErrors() {
-  return useSelector((s) => s.discovery.errors);
+  return useSelector((s) => s.discovery?.errors ?? {});
 }
 
 export function useStepTouched(step) {
-  return useSelector((s) => s.discovery.touchedSteps.includes(String(step)));
+  return useSelector((s) => (s.discovery?.touchedSteps ?? []).includes(String(step)));
 }

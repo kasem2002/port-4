@@ -32,9 +32,10 @@ const stepMeta = [
 
 export default function Discovery() {
   const dispatch = useDispatch();
-  const step = useSelector((s) => s.discovery.step);
-  const furthest = useSelector((s) => s.discovery.furthestStep);
-  const form = useSelector((s) => s.discovery.form);
+  const step = useSelector((s) => s.discovery?.step ?? 0);
+  const furthest = useSelector((s) => s.discovery?.furthestStep ?? 0);
+  const form = useSelector((s) => s.discovery?.form);
+  if (!form) return null; // during HMR, wait for discovery reducer to register
 
   // Scroll to top when step changes.
   useEffect(() => {
