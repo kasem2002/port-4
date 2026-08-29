@@ -79,7 +79,7 @@ function StepCard({ step, index, l, t, mobileOnly = false }) {
             {t('process.stage')}
           </span>
         </div>
-        <h3 className="mt-2 font-display text-[2rem] md:text-[2.4rem] tracking-tighter2 leading-none text-ink-950">
+        <h3 className="mt-2 font-display text-[2rem] md:text-[2.4rem] tracking-tighter2 leading-[1.1] text-ink-950">
           {l(step.title)}
         </h3>
         <p className="mt-4 text-[15px] leading-relaxed text-ink-700">{l(step.body)}</p>

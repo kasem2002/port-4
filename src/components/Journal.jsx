@@ -59,7 +59,7 @@ export default function Journal() {
                     </div>
                   </div>
                   <div className="p-7 md:p-8">
-                    <h3 className="font-display text-3xl md:text-4xl tracking-tighter2 leading-tight text-ink-950 group-hover:text-brand-orange transition-colors">
+                    <h3 className="font-display text-3xl md:text-4xl tracking-tighter2 leading-[1.15] text-ink-950 group-hover:text-brand-orange transition-colors">
                       {l(featured.title)}
                     </h3>
                     <p className="mt-4 text-[15.5px] text-ink-700 leading-relaxed max-w-xl">
@@ -86,7 +86,7 @@ export default function Journal() {
                     <span>{l(a.category)}</span>
                     <span>{l(a.read)}</span>
                   </div>
-                  <h4 className="mt-3 font-display text-xl md:text-2xl tracking-tight leading-snug text-ink-950 group-hover:text-brand-orange transition-colors">
+                  <h4 className="mt-3 font-display text-xl md:text-2xl tracking-tight leading-[1.25] text-ink-950 group-hover:text-brand-orange transition-colors">
                     {l(a.title)}
                   </h4>
                   <p className="mt-2 text-[14px] text-ink-600 line-clamp-2">{l(a.excerpt)}</p>

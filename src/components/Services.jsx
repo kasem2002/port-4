@@ -112,7 +112,7 @@ export default function Services() {
                     transition={{ duration: 0.35 }}
                     className="relative mt-6"
                   >
-                    <h3 className="font-display text-4xl md:text-5xl tracking-tighter2 leading-[0.95]">
+                    <h3 className="font-display text-4xl md:text-5xl tracking-tighter2 leading-[1.08]">
                       {l(current.title)}
                     </h3>
                     <p className="mt-5 text-[15px] leading-relaxed text-paper-50/80 max-w-md">

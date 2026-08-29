@@ -66,7 +66,7 @@ export default function Projects() {
                       <span>{p.index}</span>
                       <span>{p.year}</span>
                     </div>
-                    <h3 className="mt-4 font-display text-[2.4rem] md:text-[3rem] tracking-tighter2 leading-[0.98] text-ink-950">
+                    <h3 className="mt-4 font-display text-[2.4rem] md:text-[3rem] tracking-tighter2 leading-[1.06] text-ink-950">
                       {l(p.name)}
                     </h3>
                     <p className="mt-4 text-[15.5px] leading-relaxed text-ink-700">
