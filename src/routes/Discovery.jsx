@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo.jsx';
@@ -151,23 +151,20 @@ export default function Discovery() {
         {/* Step body */}
         <div className="rounded-3xl border border-ink-900/10 bg-paper-50 shadow-panel">
           <div className="p-4 md:p-8">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
-              >
-                {CurrentStep ? (
-                  <CurrentStep />
-                ) : currentIsReview ? (
-                  <Review />
-                ) : (
-                  <Success />
-                )}
-              </motion.div>
-            </AnimatePresence>
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
+            >
+              {CurrentStep ? (
+                <CurrentStep />
+              ) : currentIsReview ? (
+                <Review />
+              ) : (
+                <Success />
+              )}
+            </motion.div>
 
             {/* Navigation only for the 5 authoring steps; review screen owns its own submit */}
             {!currentIsSuccess && !currentIsReview && (

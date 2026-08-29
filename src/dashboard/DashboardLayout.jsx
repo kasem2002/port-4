@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { AnimatePresence, motion } from 'framer-motion';
 import { logout } from '../store/authSlice.js';
-import { resetAll } from '../store/contentSlice.js';
+import { resetAll, hydrate as hydrateContent } from '../store/contentSlice.js';
 import { publish } from '../store/publishedSlice.js';
 import { setLang } from '../store/i18nSlice.js';
 import { useT, useLang } from '../hooks/useLocalized.js';
@@ -33,9 +34,7 @@ export default function DashboardLayout({ children }) {
   const published = useSelector((s) => s.published);
   const [justSaved, setJustSaved] = useState(false);
 
-  // Dirty state: draft differs from what's published to the public site.
-  // Stringify comparison is fine here — dashboard is not perf-critical, and
-  // both slices are small JSON trees.
+  // Dirty state: draft differs from what's currently published.
   const isDirty = useMemo(
     () => JSON.stringify(draft) !== JSON.stringify(published),
     [draft, published],
@@ -44,7 +43,13 @@ export default function DashboardLayout({ children }) {
   const onSave = () => {
     dispatch(publish(draft));
     setJustSaved(true);
-    setTimeout(() => setJustSaved(false), 1500);
+    setTimeout(() => setJustSaved(false), 1600);
+  };
+
+  const onDiscard = () => {
+    if (window.confirm('Discard all unsaved changes and revert to the last saved version?')) {
+      dispatch(hydrateContent(published));
+    }
   };
 
   const onReset = () => {
@@ -68,7 +73,7 @@ export default function DashboardLayout({ children }) {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <SaveStatus isDirty={isDirty} justSaved={justSaved} />
+            <StatusPill isDirty={isDirty} justSaved={justSaved} />
             <div className="hidden md:inline-flex items-center gap-0.5 rounded-full border border-ink-900/10 bg-paper-50 p-0.5">
               {['en', 'ar'].map((l) => (
                 <button
@@ -83,32 +88,9 @@ export default function DashboardLayout({ children }) {
               ))}
             </div>
             <button
-              type="button"
-              onClick={onSave}
-              disabled={!isDirty}
-              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[12.5px] font-medium transition-all ${
-                isDirty
-                  ? 'bg-brand-orange text-paper-50 hover:bg-ink-950 shadow-soft'
-                  : 'bg-ink-900/8 text-ink-500 cursor-default'
-              }`}
-              title={isDirty ? 'Publish draft to the public site' : 'No pending changes'}
-            >
-              {justSaved ? (
-                <>
-                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.2">
-                    <path d="M3 8.5l3.5 3.5L13 4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Saved
-                </>
-              ) : (
-                <>
-                  {isDirty ? 'Save changes' : 'All saved'}
-                </>
-              )}
-            </button>
-            <button
               onClick={onReset}
               className="hidden md:inline text-[12.5px] text-ink-600 hover:text-red-700 transition-colors px-2 py-1"
+              title="Wipe everything back to the defaults shipped in the source"
             >
               {t('dash.reset')}
             </button>
@@ -158,23 +140,37 @@ export default function DashboardLayout({ children }) {
           </nav>
         </aside>
 
-        <main className="col-span-12 md:col-span-9 lg:col-span-10 min-w-0">
+        {/* Main — add bottom padding so the floating save bar doesn't overlap content */}
+        <main className="col-span-12 md:col-span-9 lg:col-span-10 min-w-0 pb-24">
           {children}
         </main>
       </div>
+
+      {/* Floating save bar — appears only when the user has actual changes.
+          Sits inside the content viewport, not the topbar. */}
+      <SaveBar isDirty={isDirty} justSaved={justSaved} onSave={onSave} onDiscard={onDiscard} />
     </div>
   );
 }
 
-// Left-of-Save pill: shows "Draft" while dirty, "Live" when in sync.
-function SaveStatus({ isDirty, justSaved }) {
-  if (justSaved) return null;
+// Passive status pill in the topbar. No action — actions live in the floating bar.
+function StatusPill({ isDirty, justSaved }) {
+  if (justSaved) {
+    return (
+      <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 text-brand-green px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.16em]">
+        <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.2">
+          <path d="M3 8.5l3.5 3.5L13 4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Published
+      </span>
+    );
+  }
   return (
     <span
       className={`hidden md:inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.16em] ${
         isDirty
           ? 'border-brand-orange/40 bg-brand-orange/10 text-brand-orange'
-          : 'border-brand-green/30 bg-brand-green/10 text-brand-green'
+          : 'border-ink-900/10 bg-paper-50 text-ink-500'
       }`}
     >
       <span
@@ -182,7 +178,59 @@ function SaveStatus({ isDirty, justSaved }) {
           isDirty ? 'bg-brand-orange animate-pulse' : 'bg-brand-green'
         }`}
       />
-      {isDirty ? 'Draft — not saved' : 'Live'}
+      {isDirty ? 'Unsaved changes' : 'Live · in sync'}
     </span>
+  );
+}
+
+// Floating action bar. Only mounts when there are unsaved changes (or when
+// we're briefly celebrating a save). Sits above the main content, inside
+// the viewport — not in the topbar.
+function SaveBar({ isDirty, justSaved, onSave, onDiscard }) {
+  const show = isDirty || justSaved;
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          className="fixed inset-x-0 bottom-4 md:bottom-6 z-40 flex justify-center px-4 pointer-events-none"
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 60, opacity: 0 }}
+          transition={{ duration: 0.28, ease: [0.2, 0.7, 0.2, 1] }}
+        >
+          <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-ink-900/10 bg-paper-50 shadow-panel px-2 py-1.5 md:px-3 md:py-2">
+            {justSaved ? (
+              <span className="inline-flex items-center gap-2 rounded-full bg-brand-green/10 text-brand-green px-3 py-1.5 text-[13px] font-medium">
+                <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M3 8.5l3.5 3.5L13 4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Changes published to the live site
+              </span>
+            ) : (
+              <>
+                <span className="hidden sm:inline-flex items-center gap-2 pl-3 pr-1 text-[13px] text-ink-700">
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand-orange animate-pulse" />
+                  You have unsaved changes
+                </span>
+                <button
+                  type="button"
+                  onClick={onDiscard}
+                  className="rounded-full border border-ink-900/12 bg-paper-50 text-ink-800 px-3.5 py-1.5 text-[12.5px] font-medium hover:bg-paper-100 transition-colors"
+                >
+                  Discard
+                </button>
+                <button
+                  type="button"
+                  onClick={onSave}
+                  className="rounded-full bg-brand-orange text-paper-50 px-4 py-1.5 text-[13px] font-medium hover:bg-ink-950 transition-colors shadow-soft"
+                >
+                  Save changes
+                </button>
+              </>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
