@@ -430,11 +430,21 @@ export const defaultContent = {
       'شراكات||تدوم.',
     ),
     accentLine: 1,
+    // Each partner: name (localized) + logo (image URL, data: URI, or inline
+    // SVG markup). Empty logo falls back to a stylized wordmark of the name.
     items: [
-      L('Northline', 'نورث لاين'), L('Ember', 'إمبر'), L('Kiln', 'كيلن'),
-      L('Atlas', 'أطلس'), L('Ferro', 'فيرو'), L('Halcyon', 'هالسيون'),
-      L('Meridian', 'ميريديان'), L('Ostinato', 'أوستيناتو'), L('Reef', 'ريف'),
-      L('Vault', 'فولت'), L('Quill', 'كويل'), L('Ridge', 'ريدج'),
+      { name: L('Northline', 'نورث لاين'), logo: '' },
+      { name: L('Ember', 'إمبر'), logo: '' },
+      { name: L('Kiln', 'كيلن'), logo: '' },
+      { name: L('Atlas', 'أطلس'), logo: '' },
+      { name: L('Ferro', 'فيرو'), logo: '' },
+      { name: L('Halcyon', 'هالسيون'), logo: '' },
+      { name: L('Meridian', 'ميريديان'), logo: '' },
+      { name: L('Ostinato', 'أوستيناتو'), logo: '' },
+      { name: L('Reef', 'ريف'), logo: '' },
+      { name: L('Vault', 'فولت'), logo: '' },
+      { name: L('Quill', 'كويل'), logo: '' },
+      { name: L('Ridge', 'ريدج'), logo: '' },
     ],
   },
 

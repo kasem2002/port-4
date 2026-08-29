@@ -101,6 +101,18 @@
   }
 }
 
+/* Partner-logo container constrains user-provided SVG markup so it can never
+   break the grid row. Height caps at ~2.5rem and width auto-scales. */
+.partner-logo-svg svg {
+  max-height: 2.75rem;
+  width: auto;
+  max-width: 100%;
+  display: block;
+}
+@media (min-width: 768px) {
+  .partner-logo-svg svg { max-height: 3rem; }
+}
+
 /* Custom scrollbar (subtle) */
 ::-webkit-scrollbar {
   width: 10px;
