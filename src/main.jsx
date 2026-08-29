@@ -11,10 +11,14 @@ import './index.css';
 // paints in the correct language and with saved edits already applied.
 hydrateStore(store);
 
+// When served under a sub-path (e.g. GitHub Pages), Vite injects BASE_URL like
+// "/port-4/". Trim the trailing slash for react-router's basename.
+const basename = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <App />
       </BrowserRouter>
     </Provider>
