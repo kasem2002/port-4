@@ -60,13 +60,6 @@ export default function Navbar() {
             ))}
           </ul>
           <div className="flex items-center gap-2">
-            <span className="hidden md:inline-flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-600">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-green/60" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-green" />
-              </span>
-              {t('nav.openForQ4')}
-            </span>
             <LangToggle />
             <a href="#contact" className="hidden md:inline-flex btn-primary">
               {t('nav.startProject')}
