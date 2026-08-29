@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   setField,
@@ -9,6 +10,7 @@ import {
   setFeatured,
 } from '../store/contentSlice.js';
 import { useT } from '../hooks/useLocalized.js';
+import Modal from './Modal.jsx';
 
 // A section wrapper.
 export function Panel({ title, description, children, actions }) {
@@ -196,6 +198,8 @@ export function CommaList({ label, value, onChange, hint }) {
 }
 
 // A reusable list editor with add / remove / move controls.
+// "Add" opens a popup where the new item is filled in before it lands in
+// the list — Cancel discards it entirely.
 export function ListEditor({
   path,
   items,
@@ -203,52 +207,94 @@ export function ListEditor({
   makeEmpty,
   title = 'Items',
   itemLabel = (i) => `Item ${i + 1}`,
+  addLabel,
   allowFeatured = false,
 }) {
   const dispatch = useDispatch();
   const t = useT();
+  const [pendingIndex, setPendingIndex] = useState(null);
+  const isAdding = pendingIndex !== null;
+
+  const openAddModal = () => {
+    // The new item lands at the current tail. Capture that index before
+    // dispatch so we know which one to hide + which one to discard on cancel.
+    const newIndex = items.length;
+    dispatch(addListItem({ path, item: makeEmpty() }));
+    setPendingIndex(newIndex);
+  };
+
+  const confirmAdd = () => setPendingIndex(null);
+
+  const cancelAdd = () => {
+    if (pendingIndex != null) {
+      dispatch(removeListItem({ path, index: pendingIndex }));
+    }
+    setPendingIndex(null);
+  };
+
+  const pendingItem = pendingIndex != null ? items[pendingIndex] : null;
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-600">{title}</p>
         <button
           type="button"
-          onClick={() => dispatch(addListItem({ path, item: makeEmpty() }))}
+          onClick={openAddModal}
           className="rounded-full bg-ink-950 text-paper-50 px-3.5 py-1.5 text-[12px] font-medium hover:bg-brand-orange transition-colors"
         >
-          + {t('dash.add')}
+          + {addLabel || t('dash.add')}
         </button>
       </div>
       <div className="space-y-3">
-        {items.map((item, i) => (
-          <div key={i} className="rounded-xl border border-ink-900/10 bg-paper-100/40 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
-                {itemLabel(i)}
-              </p>
-              <div className="flex items-center gap-1.5">
-                {allowFeatured && (
-                  <button
-                    type="button"
-                    onClick={() => dispatch(setFeatured({ path, index: i }))}
-                    className={`rounded-md px-2 py-1 text-[11px] font-mono uppercase tracking-[0.14em] transition-colors ${
-                      item.featured
-                        ? 'bg-brand-orange text-paper-50'
-                        : 'text-ink-500 border border-ink-900/10 hover:text-ink-900'
-                    }`}
-                  >
-                    ★ {t('dash.featured')}
-                  </button>
-                )}
-                <IconBtn onClick={() => dispatch(moveListItem({ path, from: i, to: i - 1 }))} title={t('dash.moveUp')}>↑</IconBtn>
-                <IconBtn onClick={() => dispatch(moveListItem({ path, from: i, to: i + 1 }))} title={t('dash.moveDown')}>↓</IconBtn>
-                <IconBtn onClick={() => dispatch(removeListItem({ path, index: i }))} title={t('dash.remove')} danger>×</IconBtn>
+        {items.map((item, i) => {
+          // Hide the pending item from the visible list — it lives only in
+          // the modal until confirmed.
+          if (i === pendingIndex) return null;
+          return (
+            <div key={i} className="rounded-xl border border-ink-900/10 bg-paper-100/40 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
+                  {itemLabel(i)}
+                </p>
+                <div className="flex items-center gap-1.5">
+                  {allowFeatured && (
+                    <button
+                      type="button"
+                      onClick={() => dispatch(setFeatured({ path, index: i }))}
+                      className={`rounded-md px-2 py-1 text-[11px] font-mono uppercase tracking-[0.14em] transition-colors ${
+                        item.featured
+                          ? 'bg-brand-orange text-paper-50'
+                          : 'text-ink-500 border border-ink-900/10 hover:text-ink-900'
+                      }`}
+                    >
+                      ★ {t('dash.featured')}
+                    </button>
+                  )}
+                  <IconBtn onClick={() => dispatch(moveListItem({ path, from: i, to: i - 1 }))} title={t('dash.moveUp')}>↑</IconBtn>
+                  <IconBtn onClick={() => dispatch(moveListItem({ path, from: i, to: i + 1 }))} title={t('dash.moveDown')}>↓</IconBtn>
+                  <IconBtn onClick={() => dispatch(removeListItem({ path, index: i }))} title={t('dash.remove')} danger>×</IconBtn>
+                </div>
               </div>
+              <div className="space-y-3">{renderItem(item, i)}</div>
             </div>
-            <div className="space-y-3">{renderItem(item, i)}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      <Modal
+        open={isAdding}
+        title={addLabel ? `Add · ${addLabel}` : `Add to ${title}`}
+        subtitle="Fill in the fields below, then Add to confirm — or Cancel to discard."
+        confirmLabel="Add"
+        cancelLabel="Cancel"
+        onCancel={cancelAdd}
+        onConfirm={confirmAdd}
+      >
+        {isAdding && pendingItem !== undefined && (
+          <div className="space-y-3">{renderItem(pendingItem, pendingIndex)}</div>
+        )}
+      </Modal>
     </div>
   );
 }
