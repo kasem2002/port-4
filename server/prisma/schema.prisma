@@ -1,0 +1,370 @@
+// PORT-4 data model.
+//
+// Conventions, mirrored across every model:
+//   • User-facing copy is stored as parallel `…En` / `…Ar` columns.
+//   • Ordered collections carry an integer `order` (ascending).
+//   • Free-form arrays (tech stacks, outcome bullets) and the submission
+//     payload are JSON encoded into `String` columns — Prisma's SQLite
+//     connector has no native Json type. Encoding and decoding happen in one
+//     place, `src/utils/json.ts`, so controllers deal in real arrays.
+//
+// SQLite locally; switch `provider` to "mysql" or "postgresql" for production
+// and re-run migrations — no application code changes required.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Auth
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Site settings — a single row (id "settings") holding brand identity and the
+// headings/copy that belong to a section rather than to a list item.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SiteSettings {
+  id String @id @default("settings")
+
+  // Brand
+  brandNameEn String @default("PORT-4")
+  brandNameAr String @default("PORT-4")
+  taglineEn   String @default("")
+  taglineAr   String @default("")
+  email       String @default("")
+  phone       String @default("")
+  locationEn  String @default("")
+  locationAr  String @default("")
+
+  // Hero
+  heroHeadlineEn   String @default("")
+  heroHeadlineAr   String @default("")
+  heroAccentLine   Int    @default(-1)
+  heroSubcopyEn    String @default("")
+  heroSubcopyAr    String @default("")
+  heroTrustTitleEn String @default("")
+  heroTrustTitleAr String @default("")
+  heroTrustSubEn   String @default("")
+  heroTrustSubAr   String @default("")
+
+  // Trust / stats
+  trustHeadingEn String @default("")
+  trustHeadingAr String @default("")
+  trustAccentLine Int   @default(-1)
+  trustBlurbEn   String @default("")
+  trustBlurbAr   String @default("")
+
+  // About
+  aboutHeadingEn       String @default("")
+  aboutHeadingAr       String @default("")
+  aboutAccentLine      Int    @default(-1)
+  aboutBodyEn          String @default("")
+  aboutBodyAr          String @default("")
+  aboutBodyTwoEn       String @default("")
+  aboutBodyTwoAr       String @default("")
+  aboutTopologyTitleEn String @default("")
+  aboutTopologyTitleAr String @default("")
+  aboutTopologySubEn   String @default("")
+  aboutTopologySubAr   String @default("")
+  aboutCoreLabelEn     String @default("")
+  aboutCoreLabelAr     String @default("")
+
+  // Services
+  servicesHeadingEn  String @default("")
+  servicesHeadingAr  String @default("")
+  servicesAccentLine Int    @default(-1)
+
+  // Process
+  processHeadingEn  String @default("")
+  processHeadingAr  String @default("")
+  processAccentLine Int    @default(-1)
+  processBlurbEn    String @default("")
+  processBlurbAr    String @default("")
+
+  // Projects
+  projectsHeadingEn  String @default("")
+  projectsHeadingAr  String @default("")
+  projectsAccentLine Int    @default(-1)
+  projectsBlurbEn    String @default("")
+  projectsBlurbAr    String @default("")
+
+  // Partners
+  partnersHeadingEn  String @default("")
+  partnersHeadingAr  String @default("")
+  partnersAccentLine Int    @default(-1)
+
+  // Contact
+  contactHeadingEn        String @default("")
+  contactHeadingAr        String @default("")
+  contactAccentLine       Int    @default(-1)
+  contactBlurbEn          String @default("")
+  contactBlurbAr          String @default("")
+  contactFormIntroEn      String @default("")
+  contactFormIntroAr      String @default("")
+  contactFormEncryptedEn  String @default("")
+  contactFormEncryptedAr  String @default("")
+  contactSubmitLabelEn    String @default("")
+  contactSubmitLabelAr    String @default("")
+  contactSubmitSendingEn  String @default("")
+  contactSubmitSendingAr  String @default("")
+  contactPrivacyNoteEn    String @default("")
+  contactPrivacyNoteAr    String @default("")
+  contactSuccessMessageEn String @default("")
+  contactSuccessMessageAr String @default("")
+
+  // Footer
+  footerAboutBlurbEn String @default("")
+  footerAboutBlurbAr String @default("")
+
+  updatedAt DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Content collections
+// ─────────────────────────────────────────────────────────────────────────────
+
+model NavItem {
+  id      String @id @default(cuid())
+  labelEn String
+  labelAr String
+  href    String
+  order   Int    @default(0)
+
+  @@index([order])
+}
+
+model SocialLink {
+  id      String @id @default(cuid())
+  icon    String
+  labelEn String
+  labelAr String
+  href    String
+  abbr    String @default("")
+  order   Int    @default(0)
+
+  @@index([order])
+}
+
+model MarqueeItem {
+  id     String @id @default(cuid())
+  textEn String
+  textAr String
+  order  Int    @default(0)
+
+  @@index([order])
+}
+
+model Stat {
+  id      String @id @default(cuid())
+  value   String
+  labelEn String
+  labelAr String
+  hintEn  String @default("")
+  hintAr  String @default("")
+  order   Int    @default(0)
+
+  @@index([order])
+}
+
+model AboutBullet {
+  id     String @id @default(cuid())
+  textEn String
+  textAr String
+  order  Int    @default(0)
+
+  @@index([order])
+}
+
+model TeamRole {
+  id     String @id @default(cuid())
+  roleEn String
+  roleAr String
+  count  Int    @default(1)
+  noteEn String @default("")
+  noteAr String @default("")
+  order  Int    @default(0)
+
+  @@index([order])
+}
+
+model Service {
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  tag           String
+  titleEn       String
+  titleAr       String
+  descriptionEn String
+  descriptionAr String
+  /// Array of { en, ar } — the "What we deliver" bullets.
+  outcomes      String  @default("[]")
+  /// Array of plain strings — technology chips.
+  stack         String  @default("[]")
+  active        Boolean @default(true)
+  order         Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+model ProcessStep {
+  id      String @id @default(cuid())
+  /// Display number shown in the UI ("01", "02"…). Distinct from the row id.
+  stepId  String
+  titleEn String
+  titleAr String
+  bodyEn  String
+  bodyAr  String
+  /// Array of { en, ar } — the chips under each step.
+  tokens  String @default("[]")
+  order   Int    @default(0)
+
+  @@index([order])
+}
+
+model Project {
+  id         String  @id @default(cuid())
+  slug       String  @unique
+  /// Display index shown in the UI ("01 / 06").
+  indexLabel String  @default("")
+  year       String  @default("")
+  nameEn     String
+  nameAr     String
+  categoryEn String  @default("")
+  categoryAr String  @default("")
+  summaryEn  String  @default("")
+  summaryAr  String  @default("")
+  resultEn   String  @default("")
+  resultAr   String  @default("")
+  image      String  @default("")
+  /// Array of plain strings — technology chips.
+  stack      String  @default("[]")
+  featured   Boolean @default(false)
+  active     Boolean @default(true)
+  order      Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+model Partner {
+  id     String @id @default(cuid())
+  nameEn String
+  nameAr String
+  /// Image URL, data URI, or inline SVG. Empty falls back to a wordmark.
+  logo   String @default("")
+  order  Int    @default(0)
+
+  @@index([order])
+}
+
+/// Chips offered in the short contact form's "Project type" field.
+model ProjectType {
+  id      String @id @default(cuid())
+  labelEn String
+  labelAr String
+  order   Int    @default(0)
+
+  @@index([order])
+}
+
+/// Chips offered in the short contact form's "Budget" field.
+model BudgetRange {
+  id    String @id @default(cuid())
+  label String
+  order Int    @default(0)
+
+  @@index([order])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Inbound — the client discovery brief
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Submission {
+  id String @id @default(cuid())
+
+  // Denormalized for the dashboard list: filtering and sorting without
+  // reaching into the JSON payload.
+  businessName    String
+  businessType    String @default("")
+  contactEmail    String @default("")
+  contactPhone    String @default("")
+  contactWhatsapp String @default("")
+  primaryGoal     String @default("")
+  /// Language the client filled the form in ("en" | "ar").
+  locale          String @default("en")
+
+  status String  @default("new") // new | reviewing | contacted | archived
+  isRead Boolean @default(false)
+
+  /// The complete brief exactly as the form produced it.
+  data String
+
+  files SubmissionFile[]
+
+  submittedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model SubmissionFile {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  /// Which part of the brief this file belongs to:
+  /// logo | productImage | teamPhoto | asset
+  field        String
+  url          String
+  originalName String
+  mimeType     String
+  size         Int
+
+  createdAt DateTime @default(now())
+
+  @@index([submissionId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Inbound — the short "start a project" form on the public site
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  company     String   @default("")
+  projectType String   @default("")
+  budget      String   @default("")
+  message     String
+  status      String   @default("new")
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

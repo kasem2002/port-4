@@ -27,6 +27,19 @@ lerna-debug.log*
 logs
 *.log
 
+# Database — SQLite lives on the server's disk, never in git
+*.db
+*.db-journal
+server/prisma/*.db
+server/prisma/*.db-journal
+
+# Client uploads — user content, served from disk
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Prisma generated client
+server/node_modules/.prisma
+
 # Editor / OS
 .vscode/*
 !.vscode/extensions.json
