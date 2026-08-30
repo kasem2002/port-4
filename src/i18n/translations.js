@@ -19,11 +19,11 @@ export const translations = {
 
     // Sections
     'sections.trust': '[ 02 · trust ]',
-    'sections.about': '[ 03 · about ]',
-    'sections.services': '[ 04 · services ]',
-    'sections.process': '[ 05 · process ]',
-    'sections.projects': '[ 06 · selected work ]',
-    'sections.partners': '[ 07 · partners ]',
+    'sections.partners': '[ 03 · partners ]',
+    'sections.about': '[ 04 · about ]',
+    'sections.services': '[ 05 · services ]',
+    'sections.process': '[ 06 · process ]',
+    'sections.projects': '[ 07 · selected work ]',
     'sections.journal': '[ 08 · journal ]',
     'sections.contact': '[ 09 · contact ]',
 
@@ -158,11 +158,11 @@ export const translations = {
     'hero.disciplines': 'تطوير · تصميم · منصات',
 
     'sections.trust': '[ ٠٢ · الثقة ]',
-    'sections.about': '[ ٠٣ · من نحن ]',
-    'sections.services': '[ ٠٤ · الخدمات ]',
-    'sections.process': '[ ٠٥ · منهجية العمل ]',
-    'sections.projects': '[ ٠٦ · أعمال مختارة ]',
-    'sections.partners': '[ ٠٧ · الشركاء ]',
+    'sections.partners': '[ ٠٣ · الشركاء ]',
+    'sections.about': '[ ٠٤ · من نحن ]',
+    'sections.services': '[ ٠٥ · الخدمات ]',
+    'sections.process': '[ ٠٦ · منهجية العمل ]',
+    'sections.projects': '[ ٠٧ · أعمال مختارة ]',
     'sections.journal': '[ ٠٨ · المدوّنة ]',
     'sections.contact': '[ ٠٩ · تواصل معنا ]',
 

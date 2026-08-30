@@ -34,11 +34,11 @@ export default function PublicSite() {
         <Hero />
         <Marquee />
         <Stats />
+        <Partners />
         <About />
         <Services />
         <Process />
         <Projects />
-        <Partners />
         <Journal />
         <Contact />
       </main>
