@@ -1,5 +1,6 @@
-// Static option lists for the discovery form. Kept in a single file so tone
-// stays consistent and it's easy to translate later.
+// Static option lists for the discovery form. Values are the canonical English
+// strings stored in the brief; `data/i18n.ts` maps them to display labels, so a
+// brief filled in Arabic still reaches the dashboard with stable keys.
 
 export const BUSINESS_TYPES = [
   'Restaurant / Café',
@@ -162,7 +163,13 @@ export const FEELINGS = [
   'Other',
 ];
 
-export const ANIMATION_LEVELS = [
+export interface AnimationLevel {
+  level: number;
+  label: string;
+  hint: string;
+}
+
+export const ANIMATION_LEVELS: AnimationLevel[] = [
   { level: 1, label: 'Simple', hint: 'Static, quiet, focused on content.' },
   { level: 2, label: 'Subtle', hint: 'Small transitions, soft reveals.' },
   { level: 3, label: 'Modern', hint: 'Refined motion throughout — the current PORT-4 default.' },
@@ -231,7 +238,12 @@ export const TRUST_FACTORS = [
   'Other',
 ];
 
-export const DAYS = [
+export interface DayMeta {
+  key: string;
+  label: string;
+}
+
+export const DAYS: DayMeta[] = [
   { key: 'sat', label: 'Saturday' },
   { key: 'sun', label: 'Sunday' },
   { key: 'mon', label: 'Monday' },
@@ -242,7 +254,14 @@ export const DAYS = [
 ];
 
 // Steps meta (used by progress + review).
-export const STEPS = [
+export interface StepMeta {
+  index: number;
+  id: string;
+  short: string;
+  title: string;
+}
+
+export const STEPS: StepMeta[] = [
   { index: 0, id: '01', short: 'Business', title: 'Tell us about your business' },
   { index: 1, id: '02', short: 'Goals', title: "Let's understand your goals" },
   { index: 2, id: '03', short: 'Services', title: 'What do you offer?' },

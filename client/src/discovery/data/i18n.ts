@@ -1,10 +1,14 @@
 // All discovery-form-specific translations.
 // Data stored in Redux stays as English keys — display labels swap per language.
 
-import { useSelector } from 'react-redux';
+import { useCallback } from "react";
+import { useAppSelector } from "@/app/hooks";
+import type { Lang } from "@/types";
 
 // ---------- Chrome strings ----------
-export const T = {
+type Table = Record<string, string>;
+
+export const T: Record<Lang, Table> = {
   en: {
     // Layout / chrome
     'chrome.brand': 'Project Brief · PORT-4',
@@ -244,6 +248,8 @@ export const T = {
     'upload.body':
       'Logos, photos, videos, before/after shots, certificates — anything that helps us understand your brand.',
     'upload.single': 'Upload image',
+    'upload.uploading': 'Uploading…',
+    'upload.failed': "That file couldn't be uploaded. Please try again.",
     'upload.dropSingle': 'Drop or click to browse',
     's4.q12.label': 'What is the ONE action you want visitors to take?',
     's4.q12.desc': 'This becomes the primary call-to-action across every page.',
@@ -348,6 +354,8 @@ export const T = {
     'review.submit.desc':
       "We'll review your project within 24 hours on weekdays and reply with next steps. Nothing here is final — we'll walk through it together on the first call.",
     'review.submit.btn': 'Submit project brief',
+    'review.submit.error':
+      "We couldn't send that just now. Please check your connection and try again.",
 
     // ---------- SUCCESS ----------
     'success.eyebrow': 'Brief received',
@@ -635,6 +643,8 @@ export const T = {
     'upload.body':
       'شعارات، صور، فيديوهات، لقطات قبل وبعد، شهادات — أي شيء يساعدنا على فهم علامتك.',
     'upload.single': 'ارفع صورة',
+    'upload.uploading': 'جارٍ الرفع…',
+    'upload.failed': 'تعذّر رفع الملف. من فضلك حاول مرة أخرى.',
     'upload.dropSingle': 'أفلت الملف أو انقر للتصفّح',
     's4.q12.label': 'ما الفعل الأوحد الذي تريد أن يقوم به الزوار؟',
     's4.q12.desc': 'يصبح هذا هو الدعوة الرئيسيّة للفعل عبر كل صفحة.',
@@ -736,6 +746,8 @@ export const T = {
     'review.submit.desc':
       'سنراجع مشروعك خلال 24 ساعة في أيام العمل ونردّ بالخطوات التالية. لا شيء نهائي هنا — سنمرّ عليه معاً في المكالمة الأولى.',
     'review.submit.btn': 'إرسال موجز المشروع',
+    'review.submit.error':
+      'تعذّر الإرسال الآن. تحقّق من الاتصال وحاول مرة أخرى.',
 
     // Success
     'success.eyebrow': 'تم استلام الموجز',
@@ -797,7 +809,7 @@ export const T = {
 // ---------- Option label map ----------
 // Keys are the canonical English strings stored in Redux. Values contain the
 // display label per language. Missing keys fall back to the key itself.
-export const OPTION_LABELS = {
+export const OPTION_LABELS: Record<string, { en: string; ar: string }> = {
   // Business types
   'Restaurant / Café': { en: 'Restaurant / Café', ar: 'مطعم / مقهى' },
   'Retail / Shop': { en: 'Retail / Shop', ar: 'متجر / تجزئة' },
@@ -1013,36 +1025,42 @@ export const OPTION_LABELS = {
 };
 
 // ---------- Helpers / hooks ----------
-export function optionLabel(key, lang) {
+
+/** Display label for a stored option value; unknown keys pass through. */
+export function optionLabel(key: string, lang: Lang): string {
   const entry = OPTION_LABELS[key];
   if (!entry) return key;
   return entry[lang] || entry.en || key;
 }
 
-export function tr(lang, key, params) {
-  const table = T[lang] || T.en;
-  let s = table[key] ?? T.en[key] ?? key;
-  if (params && typeof s === 'string') {
-    for (const [k, v] of Object.entries(params)) {
-      s = s.replaceAll(`{${k}}`, String(v));
+/** Looks up a chrome string and substitutes `{name}` placeholders. */
+export function tr(lang: Lang, key: string, params?: Record<string, string | number>): string {
+  const table = T[lang] ?? T.en;
+  let value = table[key] ?? T.en[key] ?? key;
+  if (params) {
+    for (const [name, replacement] of Object.entries(params)) {
+      value = value.replaceAll(`{${name}}`, String(replacement));
     }
   }
-  return s;
+  return value;
 }
 
-// Hook — translate chrome strings.
+/** Translate a chrome string in the active language. */
 export function useDT() {
-  const lang = useSelector((s) => s.i18n.lang);
-  return (key, params) => tr(lang, key, params);
+  const lang = useAppSelector((s) => s.language.lang);
+  return useCallback(
+    (key: string, params?: Record<string, string | number>) => tr(lang, key, params),
+    [lang],
+  );
 }
 
-// Hook — translate a single option key.
+/** Translate one stored option value into its display label. */
 export function useOL() {
-  const lang = useSelector((s) => s.i18n.lang);
-  return (key) => optionLabel(key, lang);
+  const lang = useAppSelector((s) => s.language.lang);
+  return useCallback((key: string) => optionLabel(key, lang), [lang]);
 }
 
-// Hook — current language.
-export function useLang() {
-  return useSelector((s) => s.i18n.lang);
+/** The active language. */
+export function useLang(): Lang {
+  return useAppSelector((s) => s.language.lang);
 }
