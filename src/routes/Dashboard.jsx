@@ -12,7 +12,6 @@ import ServicesEditor from '../dashboard/editors/ServicesEditor.jsx';
 import ProcessEditor from '../dashboard/editors/ProcessEditor.jsx';
 import ProjectsEditor from '../dashboard/editors/ProjectsEditor.jsx';
 import PartnersEditor from '../dashboard/editors/PartnersEditor.jsx';
-import JournalEditor from '../dashboard/editors/JournalEditor.jsx';
 import ContactEditor from '../dashboard/editors/ContactEditor.jsx';
 import FooterEditor from '../dashboard/editors/FooterEditor.jsx';
 
@@ -32,7 +31,6 @@ export default function Dashboard() {
           <Route path="process" element={<ProcessEditor />} />
           <Route path="projects" element={<ProjectsEditor />} />
           <Route path="partners" element={<PartnersEditor />} />
-          <Route path="journal" element={<JournalEditor />} />
           <Route path="contact" element={<ContactEditor />} />
           <Route path="footer" element={<FooterEditor />} />
         </Routes>

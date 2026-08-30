@@ -22,7 +22,6 @@ const sections = [
   { path: 'process', label: 'Process', group: 'Sections' },
   { path: 'projects', label: 'Projects', group: 'Sections' },
   { path: 'partners', label: 'Partners', group: 'Sections' },
-  { path: 'journal', label: 'Journal', group: 'Sections' },
   { path: 'contact', label: 'Contact', group: 'Sections' },
 ];
 

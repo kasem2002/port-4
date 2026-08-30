@@ -27,7 +27,6 @@ export const defaultContent = {
     { label: L('Services', 'الخدمات'), href: '#services' },
     { label: L('Process', 'منهجية العمل'), href: '#process' },
     { label: L('About', 'من نحن'), href: '#about' },
-    { label: L('Journal', 'المدوّنة'), href: '#journal' },
     { label: L('Contact', 'تواصل معنا'), href: '#contact' },
   ],
 
@@ -449,76 +448,6 @@ export const defaultContent = {
       { name: L('Vault', 'فولت'), logo: '' },
       { name: L('Quill', 'كويل'), logo: '' },
       { name: L('Ridge', 'ريدج'), logo: '' },
-    ],
-  },
-
-  journal: {
-    heading: L(
-      'Writing from the||studio.',
-      'من مدوّنة||الفريق.',
-    ),
-    accentLine: 1,
-    items: [
-      {
-        id: 'shipping-cadence', featured: true,
-        category: L('Development', 'التطوير'),
-        title: L(
-          'Delivering weekly without losing the plot',
-          'التسليم الأسبوعي دون أن تفقد المسار',
-        ),
-        excerpt: L(
-          'The framework we use to keep long client engagements moving without turning every Friday into a rescue mission.',
-          'المنهجية التي نتبعها لإبقاء مشاريع العملاء طويلة الأمد سائرة بانتظام، دون أن يتحوّل كل يوم جمعة إلى مهمة إنقاذ.',
-        ),
-        author: L('Ines A.', 'إيناس أ.'),
-        date: L('Aug 2026', 'أغسطس ٢٠٢٦'),
-        read: L('7 min read', 'قراءة ٧ دقائق'),
-      },
-      {
-        id: 'design-system-lite', featured: false,
-        category: L('Design', 'التصميم'),
-        title: L(
-          'A design system light enough to actually use',
-          'نظام تصميم خفيف بما يكفي ليُستخدَم فعلًا',
-        ),
-        excerpt: L(
-          'How we scope design systems for teams of four — not forty — and still keep them coherent as they grow.',
-          'كيف نضبط نطاق أنظمة التصميم لفرق من أربعة أشخاص، لا أربعين، ونحافظ على تماسكها مع نموّها.',
-        ),
-        author: L('Ravi K.', 'رافي ك.'),
-        date: L('Aug 2026', 'أغسطس ٢٠٢٦'),
-        read: L('5 min read', 'قراءة ٥ دقائق'),
-      },
-      {
-        id: 'boring-infra', featured: false,
-        category: L('Platform', 'البنية التقنية'),
-        title: L(
-          'Boring infrastructure is a feature',
-          'البنية التحتية المملّة ميزة، لا عيب',
-        ),
-        excerpt: L(
-          'The five decisions that determine whether your on-call rotation is livable — regardless of stack.',
-          'خمسة قرارات تحدد ما إذا كانت نوبة الاستدعاء الفني محتملة أم لا، بغضّ النظر عن التقنيات المستخدمة.',
-        ),
-        author: L('Mira O.', 'ميرا أ.'),
-        date: L('Jul 2026', 'يوليو ٢٠٢٦'),
-        read: L('6 min read', 'قراءة ٦ دقائق'),
-      },
-      {
-        id: 'estimating', featured: false,
-        category: L('Practice', 'ممارسات مهنية'),
-        title: L(
-          'Estimating in weeks, not story points',
-          'التقدير بالأسابيع، لا بنقاط القصص',
-        ),
-        excerpt: L(
-          'A pragmatic estimation method for agency work that respects both engineering reality and client budgets.',
-          'طريقة تقدير عملية تناسب عمل الوكالات وتحترم واقع التطوير وميزانيات العملاء في الوقت نفسه.',
-        ),
-        author: L('Dan L.', 'دان ل.'),
-        date: L('Jul 2026', 'يوليو ٢٠٢٦'),
-        read: L('4 min read', 'قراءة ٤ دقائق'),
-      },
     ],
   },
 

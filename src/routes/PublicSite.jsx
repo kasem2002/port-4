@@ -12,7 +12,6 @@ import Services from '../components/Services.jsx';
 import Process from '../components/Process.jsx';
 import Projects from '../components/Projects.jsx';
 import Partners from '../components/Partners.jsx';
-import Journal from '../components/Journal.jsx';
 import Contact from '../components/Contact.jsx';
 import Footer from '../components/Footer.jsx';
 
@@ -39,7 +38,6 @@ export default function PublicSite() {
         <Services />
         <Process />
         <Projects />
-        <Journal />
         <Contact />
       </main>
       <Footer />

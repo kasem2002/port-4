@@ -8,7 +8,6 @@ export default function Overview() {
     { label: 'Projects', value: content.projects.items.length },
     { label: 'Process steps', value: content.process.steps.length },
     { label: 'Team roles', value: content.about.team.length },
-    { label: 'Articles', value: content.journal.items.length },
     { label: 'Partners', value: content.partners.items.length },
     { label: 'Nav links', value: content.nav.length },
     { label: 'Marquee words', value: content.marquee.length },

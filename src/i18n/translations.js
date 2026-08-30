@@ -24,8 +24,7 @@ export const translations = {
     'sections.services': '[ 05 · services ]',
     'sections.process': '[ 06 · process ]',
     'sections.projects': '[ 07 · selected work ]',
-    'sections.journal': '[ 08 · journal ]',
-    'sections.contact': '[ 09 · contact ]',
+    'sections.contact': '[ 08 · contact ]',
 
     // Services preview
     'services.deliver': 'What we deliver',
@@ -49,11 +48,6 @@ export const translations = {
     // Partners
     'partners.blurb':
       "A rotating list of the studios, agencies and product teams we've partnered with on long-term software engagements.",
-
-    // Journal
-    'journal.featured': 'Featured',
-    'journal.blurb':
-      'Occasional notes on software development, design, and running a small development team — written by the people doing the work.',
 
     // Contact
     'contact.blurb':
@@ -163,8 +157,7 @@ export const translations = {
     'sections.services': '[ ٠٥ · الخدمات ]',
     'sections.process': '[ ٠٦ · منهجية العمل ]',
     'sections.projects': '[ ٠٧ · أعمال مختارة ]',
-    'sections.journal': '[ ٠٨ · المدوّنة ]',
-    'sections.contact': '[ ٠٩ · تواصل معنا ]',
+    'sections.contact': '[ ٠٨ · تواصل معنا ]',
 
     'services.deliver': 'ما نُقدّمه',
     'services.stack': 'التقنيات المستخدمة',
@@ -184,10 +177,6 @@ export const translations = {
 
     'partners.blurb':
       'قائمة متجدّدة بالاستوديوهات والوكالات وفرق المنتجات التي شاركناها في مشاريع تطوير برمجيات طويلة الأمد.',
-
-    'journal.featured': 'مميّز',
-    'journal.blurb':
-      'ملاحظات دورية حول تطوير البرمجيات والتصميم وإدارة فريق تطوير صغير، بقلم الأشخاص الذين ينفّذون العمل بأنفسهم.',
 
     'contact.blurb':
       'نردّ على كل استفسار مشروع خلال ٢٤ ساعة في أيام العمل. أخبرنا بما تعمل على بنائه، وسنكون صريحين معك حول ما إذا كنّا الفريق المناسب لمشروعك.',
