@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDT } from '../data/i18n.js';
 
 const hexRe = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
 export default function ColorList({ colors, onChange }) {
+  const t = useDT();
   const set = (i, val) => {
     const next = [...colors];
     next[i] = val;
@@ -64,7 +66,7 @@ export default function ColorList({ colors, onChange }) {
         onClick={add}
         className="inline-flex items-center gap-2 rounded-full border border-ink-900/15 px-3.5 py-2 text-[12.5px] font-medium text-ink-900 hover:border-brand-orange hover:text-brand-orange transition-colors"
       >
-        <span className="text-[14px]">+</span> Add another color
+        <span className="text-[14px]">+</span> {t('color.add')}
       </button>
     </div>
   );

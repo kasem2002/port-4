@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/store.js';
 import { hydrateStore } from './store/persist.js';
 import { hydrateDiscoveryStore } from './discovery/store/discoveryPersist.js';
+import { hydrateSubmissionsStore } from './discovery/store/submissionsPersist.js';
 import App from './App.jsx';
 import './index.css';
 
@@ -12,6 +13,7 @@ import './index.css';
 // paints in the correct language and with saved edits already applied.
 hydrateStore(store);
 hydrateDiscoveryStore(store);
+hydrateSubmissionsStore(store);
 
 // When served under a sub-path (e.g. GitHub Pages), Vite injects BASE_URL like
 // "/port-4/". Trim the trailing slash for react-router's basename.

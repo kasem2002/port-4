@@ -2,11 +2,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateHours } from '../store/discoverySlice.js';
 import { DAYS } from '../data/options.js';
 import { TimeInput } from './Inputs.jsx';
+import { useDT, useLang } from '../data/i18n.js';
+
+const DAY_LABELS = {
+  sat: { en: 'Saturday', ar: 'السبت' },
+  sun: { en: 'Sunday', ar: 'الأحد' },
+  mon: { en: 'Monday', ar: 'الاثنين' },
+  tue: { en: 'Tuesday', ar: 'الثلاثاء' },
+  wed: { en: 'Wednesday', ar: 'الأربعاء' },
+  thu: { en: 'Thursday', ar: 'الخميس' },
+  fri: { en: 'Friday', ar: 'الجمعة' },
+};
 
 export default function WeekSchedule() {
   const hours = useSelector((s) => s.discovery.form.businessHours);
   const dispatch = useDispatch();
   const byKey = Object.fromEntries(hours.map((h) => [h.day, h]));
+  const t = useDT();
+  const lang = useLang();
 
   return (
     <div className="rounded-2xl border border-ink-900/10 bg-paper-50 overflow-hidden">
@@ -20,7 +33,9 @@ export default function WeekSchedule() {
             } ${row.closed ? 'bg-paper-100/40' : ''}`}
           >
             <div className="col-span-4 md:col-span-3">
-              <p className="font-display text-[17px] tracking-tighter2 text-ink-950">{d.label}</p>
+              <p className="font-display text-[17px] tracking-tighter2 text-ink-950">
+                {DAY_LABELS[d.key]?.[lang] || d.label}
+              </p>
             </div>
             <div className="col-span-8 md:col-span-9 flex flex-wrap items-center justify-end gap-2 md:gap-3">
               <div className="flex items-center gap-2">
@@ -47,7 +62,7 @@ export default function WeekSchedule() {
                     : 'border-ink-900/15 text-ink-600 hover:border-ink-900/30'
                 }`}
               >
-                {row.closed ? 'Closed' : 'Mark closed'}
+                {row.closed ? t('s4.q10.closed') : t('s4.q10.markClosed')}
               </button>
             </div>
           </div>

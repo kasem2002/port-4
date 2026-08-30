@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { useDT } from '../data/i18n.js';
 
 // Question wrapper — number, label, optional description, error, children.
 export default function Question({
@@ -10,6 +11,7 @@ export default function Question({
   error,
   children,
 }) {
+  const t = useDT();
   return (
     <div className="border-b border-ink-900/8 py-8 first:pt-0 last:border-b-0 last:pb-0">
       <div className="grid grid-cols-12 gap-4 md:gap-8">
@@ -22,7 +24,7 @@ export default function Question({
             )}
             {optional && (
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
-                optional
+                {t('question.optional')}
               </span>
             )}
           </div>

@@ -8,6 +8,7 @@ import { SingleUpload, MultiUpload } from '../components/FileUpload.jsx';
 import StarRating from '../components/StarRating.jsx';
 import WeekSchedule from '../components/WeekSchedule.jsx';
 import { useBind, useField, useErrors } from '../useBind.js';
+import { useDT } from '../data/i18n.js';
 import {
   addReview,
   removeReview,
@@ -31,6 +32,7 @@ export default function Step05Final() {
   const dispatch = useDispatch();
   const { set, toggle } = useBind();
   const errors = useErrors();
+  const t = useDT();
 
   const availability = useField('content.availability');
   const photos = useField('content.photos');
@@ -59,14 +61,14 @@ export default function Step05Final() {
       {/* ---------- CONTENT ---------- */}
       <div>
         <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-brand-orange mb-2">
-          Content
+          {t('group.content')}
         </p>
         <h3 className="font-display text-[1.75rem] tracking-tighter2 text-ink-950">
-          What do you already have?
+          {t('group.content.title')}
         </h3>
       </div>
 
-      <Question number="Q1" label="Do you already have website content?" optional>
+      <Question number="Q1" label={t('s4.q1.label')} optional>
         <RadioGroup
           options={CONTENT_AVAILABILITY}
           value={availability}
@@ -75,7 +77,7 @@ export default function Step05Final() {
         />
       </Question>
 
-      <Question number="Q2" label="Do you have professional photos?" optional>
+      <Question number="Q2" label={t('s4.q2.label')} optional>
         <RadioGroup
           options={PHOTO_AVAILABILITY}
           value={photos}
@@ -83,7 +85,7 @@ export default function Step05Final() {
         />
       </Question>
 
-      <Question number="Q3" label="Do you have videos?" optional>
+      <Question number="Q3" label={t('s4.q3.label')} optional>
         <RadioGroup
           options={VIDEO_AVAILABILITY}
           value={videos}
@@ -94,36 +96,32 @@ export default function Step05Final() {
       {/* ---------- TRUST ---------- */}
       <div className="pt-8">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-brand-orange mb-2">
-          Trust
+          {t('group.trust')}
         </p>
         <h3 className="font-display text-[1.75rem] tracking-tighter2 text-ink-950">
-          Why customers choose you
+          {t('group.trust.title')}
         </h3>
       </div>
 
-      <Question number="Q4" label="What makes your business different?" optional>
+      <Question number="Q4" label={t('s4.q4.label')} optional>
         <TextArea
           value={differentiators}
           onChange={(v) => set('trust.differentiators', v)}
-          placeholder="The one or two things nobody else in your market does the way you do."
+          placeholder={t('s4.q4.placeholder')}
           rows={4}
         />
       </Question>
 
-      <Question
-        number="Q5"
-        label="Why should customers choose you over a competitor?"
-        optional
-      >
+      <Question number="Q5" label={t('s4.q5.label')} optional>
         <TextArea
           value={advantage}
           onChange={(v) => set('trust.competitiveAdvantage', v)}
-          placeholder="Be honest — this becomes the argument the website makes to every visitor."
+          placeholder={t('s4.q5.placeholder')}
           rows={4}
         />
       </Question>
 
-      <Question number="Q6" label="What builds customer trust?" optional>
+      <Question number="Q6" label={t('s4.q6.label')} optional>
         <CheckboxGroup
           options={TRUST_FACTORS}
           value={trustFactors}
@@ -135,12 +133,12 @@ export default function Step05Final() {
           <TextInput
             value={trustFactorOther}
             onChange={(v) => set('trust.trustFactorOther', v)}
-            placeholder="Any other trust signal we should highlight"
+            placeholder={t('s4.q6.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
 
-      <Question number="Q7" label="Do you have customer reviews?" optional>
+      <Question number="Q7" label={t('s4.q7.label')} optional>
         <RadioGroup
           options={YES_NO}
           value={hasReviews}
@@ -156,17 +154,17 @@ export default function Step05Final() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                      Customer name
+                      {t('s4.q7.customerName')}
                     </label>
                     <TextInput
                       value={r.customerName}
                       onChange={(v) => dispatch(updateReview({ id: r.id, patch: { customerName: v } }))}
-                      placeholder="Full name"
+                      placeholder={t('s4.q7.customerNamePlaceholder')}
                     />
                   </div>
                   <div>
                     <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                      Rating
+                      {t('s4.q7.rating')}
                     </label>
                     <div className="h-[46px] flex items-center">
                       <StarRating
@@ -178,25 +176,25 @@ export default function Step05Final() {
                 </div>
                 <div>
                   <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                    Review
+                    {t('s4.q7.review')}
                   </label>
                   <TextArea
                     value={r.text}
                     onChange={(v) => dispatch(updateReview({ id: r.id, patch: { text: v } }))}
-                    placeholder="Paste or type the review here."
+                    placeholder={t('s4.q7.reviewPlaceholder')}
                     rows={3}
                   />
                 </div>
               </div>
             )}
-            itemLabel={(i) => `Review ${String(i + 1).padStart(2, '0')}`}
-            addLabel="Add another review"
+            itemLabel={(i) => t('s4.q7.itemLabel', { n: String(i + 1).padStart(2, '0') })}
+            addLabel={t('s4.q7.add')}
           />
         </ConditionalReveal>
       </Question>
 
       {/* ---------- TEAM ---------- */}
-      <Question number="Q8" label="Do you want to show your team?" optional>
+      <Question number="Q8" label={t('s4.q8.label')} optional>
         <RadioGroup
           options={YES_NO}
           value={showTeam}
@@ -213,52 +211,51 @@ export default function Step05Final() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                        Name
+                        {t('s4.q8.name')}
                       </label>
                       <TextInput
                         value={m.name}
                         onChange={(v) => dispatch(updateTeamMember({ id: m.id, patch: { name: v } }))}
-                        placeholder="Full name"
+                        placeholder={t('s4.q8.namePlaceholder')}
                       />
                     </div>
                     <div>
                       <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                        Position
+                        {t('s4.q8.position')}
                       </label>
                       <TextInput
                         value={m.position}
                         onChange={(v) => dispatch(updateTeamMember({ id: m.id, patch: { position: v } }))}
-                        placeholder="e.g. Founder"
+                        placeholder={t('s4.q8.positionPlaceholder')}
                       />
                     </div>
                   </div>
                   <div>
                     <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                      Short bio
+                      {t('s4.q8.bio')}
                     </label>
                     <TextArea
                       value={m.bio}
                       onChange={(v) => dispatch(updateTeamMember({ id: m.id, patch: { bio: v } }))}
-                      placeholder="A sentence or two."
+                      placeholder={t('s4.q8.bioPlaceholder')}
                       rows={2}
                     />
                   </div>
                 </div>
                 <div>
                   <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-                    Photo
+                    {t('s4.q8.photo')}
                   </label>
                   <SingleUpload
                     value={m.photo}
                     onChange={(v) => dispatch(updateTeamMember({ id: m.id, patch: { photo: v } }))}
-                    label="Upload photo"
                     compact
                   />
                 </div>
               </div>
             )}
-            itemLabel={(i) => `Member ${String(i + 1).padStart(2, '0')}`}
-            addLabel="Add another team member"
+            itemLabel={(i) => t('s4.q8.itemLabel', { n: String(i + 1).padStart(2, '0') })}
+            addLabel={t('s4.q8.add')}
           />
         </ConditionalReveal>
       </Question>
@@ -266,10 +263,10 @@ export default function Step05Final() {
       {/* ---------- CONTACT ---------- */}
       <div className="pt-8">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-brand-orange mb-2">
-          Contact
+          {t('group.contact')}
         </p>
         <h3 className="font-display text-[1.75rem] tracking-tighter2 text-ink-950">
-          How can visitors reach you?
+          {t('group.contact.title')}
         </h3>
       </div>
 
@@ -283,89 +280,87 @@ export default function Step05Final() {
         <div className="grid grid-cols-12 gap-4 md:gap-8">
           <div className="col-span-12 md:col-span-4">
             <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-brand-orange">
-              Q9
+              {t('s4.q9.number')}
             </span>
             <h3 className="mt-1.5 font-display text-[1.5rem] md:text-[1.75rem] tracking-tighter2 leading-[1.15] text-ink-950">
-              Contact channels
+              {t('s4.q9.label')}
             </h3>
             <p className="mt-2.5 text-[14px] leading-relaxed text-ink-600 max-w-sm">
-              At least one of WhatsApp, phone or email is required so we can reach you.
+              {t('s4.q9.desc')}
             </p>
           </div>
           <div className="col-span-12 md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-3">
             <ContactField
-              label="WhatsApp"
+              label={t('s4.q9.whatsapp')}
               value={contact.whatsapp}
               onChange={(v) => set('contact.whatsapp', v)}
               error={errors['contact.whatsapp']}
               placeholder="+964 750 000 0000"
             />
             <ContactField
-              label="Phone"
+              label={t('s4.q9.phone')}
               value={contact.phone}
               onChange={(v) => set('contact.phone', v)}
               error={errors['contact.phone']}
               placeholder="+964 750 000 0000"
             />
             <ContactField
-              label="Email"
+              label={t('s4.q9.email')}
               value={contact.email}
               onChange={(v) => set('contact.email', v)}
               error={errors['contact.email']}
-              placeholder="hello@yourbusiness.com"
+              placeholder={t('s4.q9.emailPh')}
               type="email"
             />
             <ContactField
-              label="Instagram"
+              label={t('s4.q9.instagram')}
               value={contact.instagram}
               onChange={(v) => set('contact.instagram', v)}
-              placeholder="@handle or full URL"
+              placeholder={t('s4.q9.instagramPh')}
             />
             <ContactField
-              label="Facebook"
+              label={t('s4.q9.facebook')}
               value={contact.facebook}
               onChange={(v) => set('contact.facebook', v)}
-              placeholder="Page URL"
+              placeholder={t('s4.q9.facebookPh')}
             />
             <ContactField
-              label="Other social"
+              label={t('s4.q9.other')}
               value={contact.otherSocial}
               onChange={(v) => set('contact.otherSocial', v)}
-              placeholder="TikTok, LinkedIn, etc."
+              placeholder={t('s4.q9.otherPh')}
             />
             <ContactField
-              label="Google Maps / Waze"
+              label={t('s4.q9.maps')}
               value={contact.maps}
               onChange={(v) => set('contact.maps', v)}
-              placeholder="Map link"
+              placeholder={t('s4.q9.mapsPh')}
               wide
             />
             <ContactField
-              label="Business address"
+              label={t('s4.q9.address')}
               value={contact.address}
               onChange={(v) => set('contact.address', v)}
-              placeholder="Street, city, country"
+              placeholder={t('s4.q9.addressPh')}
               wide
             />
           </div>
         </div>
       </div>
 
-      {/* ---------- BUSINESS HOURS ---------- */}
       <Question
         number="Q10"
-        label="Weekly business hours"
-        description="Skip any day you're closed. Times shown on the site match your local timezone."
+        label={t('s4.q10.label')}
+        description={t('s4.q10.desc')}
         optional
       >
         <WeekSchedule />
       </Question>
 
-      {/* ---------- ASSETS ---------- */}
       <Question
         number="Q11"
-        label="Assets"
-        description="Drop any files you want us to have — logos, product photos, videos, certificates. You can send more later if needed."
+        label={t('s4.q11.label')}
+        description={t('s4.q11.desc')}
         optional
       >
         <MultiUpload
@@ -378,31 +373,31 @@ export default function Step05Final() {
       {/* ---------- FINAL ---------- */}
       <div className="pt-8">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-brand-orange mb-2">
-          Final Details
+          {t('group.final')}
         </p>
         <h3 className="font-display text-[1.75rem] tracking-tighter2 text-ink-950">
-          A few last things
+          {t('group.final.title')}
         </h3>
       </div>
 
       <Question
         number="Q12"
-        label="What is the ONE action you want visitors to take?"
-        description="This becomes the primary call-to-action across every page."
+        label={t('s4.q12.label')}
+        description={t('s4.q12.desc')}
         required
         error={errors['final.primaryAction']}
       >
         <TextInput
           value={primaryAction}
           onChange={(v) => set('final.primaryAction', v)}
-          placeholder='e.g. "Send us a WhatsApp message"'
+          placeholder={t('s4.q12.placeholder')}
         />
       </Question>
 
       <Question
         number="Q13"
-        label="Three words that describe your business"
-        description="These often end up shaping the hero, the tone, and the visual direction."
+        label={t('s4.q13.label')}
+        description={t('s4.q13.desc')}
         optional
       >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -411,35 +406,35 @@ export default function Step05Final() {
               key={i}
               value={keywords[i] || ''}
               onChange={(v) => dispatch(updateKeyword({ index: i, value: v }))}
-              placeholder={`Word ${i + 1}`}
+              placeholder={t('s4.q13.word', { n: i + 1 })}
             />
           ))}
         </div>
       </Question>
 
-      <Question number="Q14" label="Anything you specifically want included?" optional>
+      <Question number="Q14" label={t('s4.q14.label')} optional>
         <TextArea
           value={mustInclude}
           onChange={(v) => set('final.mustInclude', v)}
-          placeholder="A section, an animation, a feature — anything we should make sure to add."
+          placeholder={t('s4.q14.placeholder')}
           rows={4}
         />
       </Question>
 
-      <Question number="Q15" label="Anything you absolutely DON'T want?" optional>
+      <Question number="Q15" label={t('s4.q15.label')} optional>
         <TextArea
           value={mustAvoid}
           onChange={(v) => set('final.mustAvoid', v)}
-          placeholder="Colors, patterns, technologies, phrases — whatever's off the table."
+          placeholder={t('s4.q15.placeholder')}
           rows={4}
         />
       </Question>
 
-      <Question number="Q16" label="Anything else we should know?" optional>
+      <Question number="Q16" label={t('s4.q16.label')} optional>
         <TextArea
           value={additionalNotes}
           onChange={(v) => set('final.additionalNotes', v)}
-          placeholder="Deadlines, competitors, previous attempts, internal politics — anything at all."
+          placeholder={t('s4.q16.placeholder')}
           rows={4}
         />
       </Question>

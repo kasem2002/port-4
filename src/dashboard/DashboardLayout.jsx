@@ -11,6 +11,8 @@ import Logo from '../components/Logo.jsx';
 
 const sections = [
   { path: '', label: 'Overview', group: 'Home' },
+  { path: 'submissions', label: 'Submissions', group: 'Home', badge: 'submissions' },
+  { path: 'live-sync', label: 'Live sync', group: 'Home' },
   { path: 'brand', label: 'Brand', group: 'Identity' },
   { path: 'nav', label: 'Navigation', group: 'Identity' },
   { path: 'footer', label: 'Footer', group: 'Identity' },
@@ -31,6 +33,11 @@ export default function DashboardLayout({ children }) {
   const lang = useLang();
   const draft = useSelector((s) => s.content);
   const published = useSelector((s) => s.published);
+  const submissions = useSelector((s) => s.submissions);
+  const unreadCount = useMemo(
+    () => (submissions?.items ?? []).filter((b) => !submissions.seen?.[b.id]).length,
+    [submissions],
+  );
   const [justSaved, setJustSaved] = useState(false);
 
   // Dirty state: draft differs from what's currently published.
@@ -130,6 +137,11 @@ export default function DashboardLayout({ children }) {
                         }
                       >
                         <span>{s.label}</span>
+                        {s.badge === 'submissions' && unreadCount > 0 && (
+                          <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1.5 rounded-full bg-brand-orange text-paper-50 font-mono text-[10px] tracking-normal">
+                            {unreadCount}
+                          </span>
+                        )}
                       </NavLink>
                     </li>
                   ))}

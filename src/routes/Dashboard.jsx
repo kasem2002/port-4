@@ -14,6 +14,8 @@ import ProjectsEditor from '../dashboard/editors/ProjectsEditor.jsx';
 import PartnersEditor from '../dashboard/editors/PartnersEditor.jsx';
 import ContactEditor from '../dashboard/editors/ContactEditor.jsx';
 import FooterEditor from '../dashboard/editors/FooterEditor.jsx';
+import SubmissionsView from '../dashboard/submissions/SubmissionsView.jsx';
+import LiveSyncSettings from '../dashboard/submissions/LiveSyncSettings.jsx';
 
 export default function Dashboard() {
   return (
@@ -21,6 +23,8 @@ export default function Dashboard() {
       <DashboardLayout>
         <Routes>
           <Route index element={<Overview />} />
+          <Route path="submissions" element={<SubmissionsView />} />
+          <Route path="live-sync" element={<LiveSyncSettings />} />
           <Route path="brand" element={<BrandEditor />} />
           <Route path="nav" element={<NavEditor />} />
           <Route path="hero" element={<HeroEditor />} />

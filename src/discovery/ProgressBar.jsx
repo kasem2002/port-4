@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { STEPS } from './data/options.js';
+import { useDT } from './data/i18n.js';
 
 export default function ProgressBar({ current, furthest, onJump }) {
+  const t = useDT();
   return (
     <div className="w-full">
       <div className="hidden md:flex items-center gap-2">
@@ -39,7 +41,7 @@ export default function ProgressBar({ current, furthest, onJump }) {
                         : 'text-ink-400'
                     }`}
                   >
-                    {s.short}
+                    {t(`step.short.${i}`)}
                   </span>
                 </div>
                 <div className="relative h-[3px] w-full rounded-full bg-ink-900/8 overflow-hidden">
@@ -59,14 +61,14 @@ export default function ProgressBar({ current, furthest, onJump }) {
         })}
       </div>
 
-      {/* Mobile: compact horizontal track + label */}
+      {/* Mobile compact */}
       <div className="md:hidden">
         <div className="flex items-center justify-between mb-2">
           <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-brand-orange">
-            {STEPS[Math.min(current, STEPS.length - 1)]?.id ?? 'Review'}
+            {STEPS[Math.min(current, STEPS.length - 1)]?.id ?? '—'}
           </span>
           <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-500">
-            Step {Math.min(current + 1, 5)} of 5
+            {t('chrome.stepOf', { n: Math.min(current + 1, 5), total: 5 })}
           </span>
         </div>
         <div className="h-[3px] w-full rounded-full bg-ink-900/8 overflow-hidden">

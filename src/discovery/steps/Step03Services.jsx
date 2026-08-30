@@ -6,6 +6,7 @@ import ConditionalReveal from '../components/ConditionalReveal.jsx';
 import DynamicList from '../components/DynamicList.jsx';
 import { SingleUpload } from '../components/FileUpload.jsx';
 import { useBind, useField, useErrors } from '../useBind.js';
+import { useDT } from '../data/i18n.js';
 import {
   addProduct,
   updateProduct,
@@ -23,6 +24,7 @@ export default function Step03Services() {
   const dispatch = useDispatch();
   const { set } = useBind();
   const errors = useErrors();
+  const t = useDT();
 
   const offeringType = useField('services.offeringType');
   const quantity = useField('services.quantity');
@@ -33,13 +35,21 @@ export default function Step03Services() {
   const hasOffers = useField('services.hasOffers');
   const offerDetails = useField('services.offerDetails');
 
-  const itemNoun = offeringType === 'Services' ? 'service' : offeringType === 'Products' ? 'product' : 'offering';
+  // Choose the singular noun ('product' / 'service' / 'offering') for phrasing.
+  const nounKey =
+    offeringType === 'Services'
+      ? 'service'
+      : offeringType === 'Products'
+      ? 'product'
+      : 'offering';
+  const noun = t(`noun.${nounKey}`);
+  const nounCap = t(`nounCap.${nounKey}`);
 
   return (
     <div className="space-y-2">
       <Question
         number="Q1"
-        label="What do you offer?"
+        label={t('s2.q1.label')}
         required
         error={errors['services.offeringType']}
       >
@@ -50,11 +60,7 @@ export default function Step03Services() {
         />
       </Question>
 
-      <Question
-        number="Q2"
-        label={`Roughly how many ${itemNoun}s do you have?`}
-        optional
-      >
+      <Question number="Q2" label={t('s2.q2.label', { noun })} optional>
         <RadioGroup
           options={QUANTITIES}
           value={quantity}
@@ -64,32 +70,28 @@ export default function Step03Services() {
 
       <Question
         number="Q3"
-        label={`Your important ${itemNoun}s`}
-        description="Add the ones that matter most. You can always add more later. Featured items get prominent placement on the site."
+        label={t('s2.q3.label', { noun })}
+        description={t('s2.q3.desc')}
         optional
       >
         <DynamicList
           items={products}
           onAdd={() => dispatch(addProduct())}
           onRemove={(id) => dispatch(removeProduct(id))}
-          renderItem={(p, i) => (
+          renderItem={(p) => (
             <ProductRow
               product={p}
               onChange={(patch) => dispatch(updateProduct({ id: p.id, patch }))}
-              itemNoun={itemNoun}
+              noun={noun}
             />
           )}
-          itemLabel={(i) => `${itemNoun.charAt(0).toUpperCase() + itemNoun.slice(1)} ${String(i + 1).padStart(2, '0')}`}
-          addLabel={`Add another ${itemNoun}`}
-          emptyLabel={`No ${itemNoun}s added yet — click below to start.`}
+          itemLabel={(i) => t('s2.q3.itemLabel', { Noun: nounCap, n: String(i + 1).padStart(2, '0') })}
+          addLabel={t('s2.q3.addLabel', { noun })}
+          emptyLabel={t('s2.q3.emptyLabel', { noun })}
         />
       </Question>
 
-      <Question
-        number="Q4"
-        label="Should prices appear on the website?"
-        optional
-      >
+      <Question number="Q4" label={t('s2.q4.label')} optional>
         <RadioGroup
           options={PRICE_OPTIONS}
           value={showPrices}
@@ -98,7 +100,7 @@ export default function Step03Services() {
         />
       </Question>
 
-      <Question number="Q5" label="Do you offer packages?" optional>
+      <Question number="Q5" label={t('s2.q5.label')} optional>
         <RadioGroup
           options={YES_NO}
           value={hasPackages}
@@ -108,17 +110,13 @@ export default function Step03Services() {
           <TextArea
             value={packageDetails}
             onChange={(v) => set('services.packageDetails', v)}
-            placeholder="Describe your packages — what's included, who they're for, roughly what they cost."
+            placeholder={t('s2.q5.placeholder')}
             rows={4}
           />
         </ConditionalReveal>
       </Question>
 
-      <Question
-        number="Q6"
-        label="Do you run special offers or discounts?"
-        optional
-      >
+      <Question number="Q6" label={t('s2.q6.label')} optional>
         <RadioGroup
           options={YES_NO_SOMETIMES}
           value={hasOffers}
@@ -128,7 +126,7 @@ export default function Step03Services() {
           <TextArea
             value={offerDetails}
             onChange={(v) => set('services.offerDetails', v)}
-            placeholder="Tell us about your typical offers — seasonal sales, referral bonuses, first-visit discounts, etc."
+            placeholder={t('s2.q6.placeholder')}
             rows={4}
           />
         </ConditionalReveal>
@@ -137,45 +135,46 @@ export default function Step03Services() {
   );
 }
 
-function ProductRow({ product, onChange, itemNoun }) {
+function ProductRow({ product, onChange, noun }) {
+  const t = useDT();
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div className="md:col-span-2 space-y-3">
         <div>
           <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-            Name
+            {t('product.name')}
           </label>
           <TextInput
             value={product.name}
             onChange={(v) => onChange({ name: v })}
-            placeholder={`e.g. Premium ${itemNoun} name`}
+            placeholder={t('product.namePlaceholder', { noun })}
           />
         </div>
         <div>
           <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-            Short description
+            {t('product.description')}
           </label>
           <TextArea
             value={product.description}
             onChange={(v) => onChange({ description: v })}
-            placeholder="One or two sentences that describe it."
+            placeholder={t('product.descriptionPlaceholder')}
             rows={2}
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-              Price
+              {t('product.price')}
             </label>
             <TextInput
               value={product.price}
               onChange={(v) => onChange({ price: v })}
-              placeholder="e.g. $199 or from $50"
+              placeholder={t('product.pricePlaceholder')}
             />
           </div>
           <div>
             <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-              Feature this
+              {t('product.featureThis')}
             </label>
             <button
               type="button"
@@ -186,19 +185,19 @@ function ProductRow({ product, onChange, itemNoun }) {
                   : 'border-ink-900/12 bg-paper-50 text-ink-600 hover:border-ink-900/25'
               }`}
             >
-              {product.featured ? '★ Featured' : 'Set as featured'}
+              {product.featured ? t('product.featured') : t('product.setFeatured')}
             </button>
           </div>
         </div>
       </div>
       <div>
         <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500 block mb-1.5">
-          Image
+          {t('product.image')}
         </label>
         <SingleUpload
           value={product.image}
           onChange={(v) => onChange({ image: v })}
-          label="Upload photo"
+          label={t('product.imageLabel')}
           compact
         />
       </div>

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useDT } from '../data/i18n.js';
 
 // Convert a File → { name, size, type, dataUrl } (base64 preview).
 function readFile(file) {
@@ -19,9 +20,11 @@ function formatSize(bytes) {
 }
 
 // Single-file upload area (logo, member photo, product image).
-export function SingleUpload({ value, onChange, accept = 'image/*', label = 'Upload image', compact = false }) {
+export function SingleUpload({ value, onChange, accept = 'image/*', label, compact = false }) {
   const inputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
+  const t = useDT();
+  const resolvedLabel = label || t('upload.single');
 
   const handleFile = async (file) => {
     if (!file) return;
@@ -81,9 +84,9 @@ export function SingleUpload({ value, onChange, accept = 'image/*', label = 'Upl
       <svg viewBox="0 0 24 24" className="h-6 w-6 text-ink-500" fill="none" stroke="currentColor" strokeWidth="1.4">
         <path d="M12 16V4M6 10l6-6 6 6M4 20h16" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <p className="text-[13.5px] text-ink-700">{label}</p>
+      <p className="text-[13.5px] text-ink-700">{resolvedLabel}</p>
       <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-500">
-        Drop or click to browse
+        {t('upload.dropSingle')}
       </p>
     </label>
   );
@@ -93,6 +96,7 @@ export function SingleUpload({ value, onChange, accept = 'image/*', label = 'Upl
 export function MultiUpload({ files, onAdd, onRemove, accept = 'image/*,video/*,.pdf,.doc,.docx' }) {
   const inputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
+  const t = useDT();
 
   const handleFiles = useCallback(
     async (fileList) => {
@@ -134,13 +138,10 @@ export function MultiUpload({ files, onAdd, onRemove, accept = 'image/*,video/*,
             <path d="M12 16V4M6 10l6-6 6 6M4 20h16" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        <p className="font-display text-xl tracking-tighter2 text-ink-950">Drop files here</p>
-        <p className="text-[13.5px] text-ink-600 max-w-sm">
-          Logos, photos, videos, before/after shots, certificates — anything that helps us
-          understand your brand.
-        </p>
+        <p className="font-display text-xl tracking-tighter2 text-ink-950">{t('upload.drop')}</p>
+        <p className="text-[13.5px] text-ink-600 max-w-sm">{t('upload.body')}</p>
         <span className="mt-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
-          or click to browse
+          {t('upload.browse')}
         </span>
       </label>
 

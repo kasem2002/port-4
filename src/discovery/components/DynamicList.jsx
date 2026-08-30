@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { useDT } from '../data/i18n.js';
 
 // Generic dynamic list wrapper: renders items with add/remove chrome.
 export default function DynamicList({
@@ -7,9 +8,11 @@ export default function DynamicList({
   onRemove,
   renderItem,
   itemLabel = (i) => `Item ${i + 1}`,
-  addLabel = 'Add another',
+  addLabel,
   emptyLabel = 'Nothing added yet.',
 }) {
+  const t = useDT();
+  const resolvedAdd = addLabel || t('list.addAnother');
   return (
     <div>
       <div className="space-y-3">
@@ -42,7 +45,7 @@ export default function DynamicList({
                   onClick={() => onRemove(item.id)}
                   className="inline-flex items-center gap-1.5 rounded-full border border-ink-900/10 px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-500 hover:border-brand-orangeDeep hover:text-brand-orangeDeep transition-colors"
                 >
-                  <span className="text-[13px] leading-none">×</span> Remove
+                  <span className="text-[13px] leading-none">×</span> {t('list.remove')}
                 </button>
               </div>
               {renderItem(item, i)}
@@ -58,7 +61,7 @@ export default function DynamicList({
         <span className="grid h-6 w-6 place-items-center rounded-full bg-ink-950 text-paper-50 group-hover:bg-brand-orange transition-colors">
           +
         </span>
-        {addLabel}
+        {resolvedAdd}
       </button>
     </div>
   );

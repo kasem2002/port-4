@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
+import { useDT } from '../data/i18n.js';
 
 // 1–5 level selector for animation intensity.
 export default function LevelSelector({ levels, value, onChange }) {
+  const t = useDT();
   return (
     <div>
       <div className="grid grid-cols-5 gap-2">
@@ -28,7 +30,7 @@ export default function LevelSelector({ levels, value, onChange }) {
               <span className={`font-mono text-[10px] uppercase tracking-[0.16em] ${
                 active ? 'text-paper-50/80' : 'text-ink-500'
               }`}>
-                {lv.label}
+                {t(`level.${lv.level}`)}
               </span>
               {active && (
                 <motion.span
@@ -42,10 +44,10 @@ export default function LevelSelector({ levels, value, onChange }) {
       </div>
       <div className="mt-4 rounded-xl bg-paper-100/60 border border-ink-900/8 px-4 py-3">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-brand-orange mb-1">
-          Level {value}
+          {t('level.label', { n: value })}
         </p>
         <p className="text-[14px] text-ink-700">
-          {levels.find((l) => l.level === value)?.hint}
+          {t(`level.${value}.hint`)}
         </p>
       </div>
     </div>

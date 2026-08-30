@@ -3,6 +3,7 @@ import { TextInput, TextArea, NumberInput } from '../components/Inputs.jsx';
 import { RadioGroup } from '../components/ChoiceGroups.jsx';
 import ConditionalReveal from '../components/ConditionalReveal.jsx';
 import { useBind, useField, useErrors } from '../useBind.js';
+import { useDT } from '../data/i18n.js';
 import {
   BUSINESS_TYPES,
   BUSINESS_DURATIONS,
@@ -12,6 +13,7 @@ import {
 export default function Step01Business() {
   const { set } = useBind();
   const errors = useErrors();
+  const t = useDT();
 
   const name = useField('business.name');
   const type = useField('business.type');
@@ -24,22 +26,17 @@ export default function Step01Business() {
 
   return (
     <div className="space-y-2">
-      <Question
-        number="Q1"
-        label="What's your business called?"
-        required
-        error={errors['business.name']}
-      >
+      <Question number="Q1" label={t('s0.q1.label')} required error={errors['business.name']}>
         <TextInput
           value={name}
           onChange={(v) => set('business.name', v)}
-          placeholder="e.g. Anwar Auto Services"
+          placeholder={t('s0.q1.placeholder')}
         />
       </Question>
 
       <Question
         number="Q2"
-        label="Which best describes your business?"
+        label={t('s0.q2.label')}
         required
         error={errors['business.type'] || errors['business.typeOther']}
       >
@@ -53,16 +50,12 @@ export default function Step01Business() {
           <TextInput
             value={typeOther}
             onChange={(v) => set('business.typeOther', v)}
-            placeholder="Tell us what type of business this is"
+            placeholder={t('s0.q2.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
 
-      <Question
-        number="Q3"
-        label="How long have you been operating?"
-        optional
-      >
+      <Question number="Q3" label={t('s0.q3.label')} optional>
         <RadioGroup
           options={BUSINESS_DURATIONS}
           value={duration}
@@ -73,22 +66,18 @@ export default function Step01Business() {
 
       <Question
         number="Q4"
-        label="Where are you based?"
-        description="City and country is enough — this helps us think about map integrations and language."
+        label={t('s0.q4.label')}
+        description={t('s0.q4.desc')}
         optional
       >
         <TextInput
           value={location}
           onChange={(v) => set('business.location', v)}
-          placeholder="e.g. Erbil, Kurdistan"
+          placeholder={t('s0.q4.placeholder')}
         />
       </Question>
 
-      <Question
-        number="Q5"
-        label="Do you have multiple branches?"
-        optional
-      >
+      <Question number="Q5" label={t('s0.q5.label')} optional>
         <RadioGroup
           options={YES_NO}
           value={hasBranches}
@@ -97,7 +86,7 @@ export default function Step01Business() {
         <ConditionalReveal show={hasBranches === 'Yes'}>
           <div>
             <label className="block font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-600 mb-2">
-              How many branches?
+              {t('s0.q5.count')}
             </label>
             <NumberInput
               value={branchCount}
@@ -110,21 +99,21 @@ export default function Step01Business() {
 
       <Question
         number="Q6"
-        label="Tell us briefly about your business"
-        description="A few sentences so we understand what you do, who you serve, and anything important about your history or personality."
+        label={t('s0.q6.label')}
+        description={t('s0.q6.desc')}
         required
         error={errors['business.description']}
       >
         <TextArea
           value={description}
           onChange={(v) => set('business.description', v)}
-          placeholder="Tell us what your business does, what you offer, and anything important we should know."
+          placeholder={t('s0.q6.placeholder')}
           rows={6}
           maxLength={2000}
         />
         <div className="mt-2 flex justify-end">
           <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-400">
-            {description?.length || 0} / 2000
+            {t('question.characters', { n: description?.length || 0, max: 2000 })}
           </span>
         </div>
       </Question>

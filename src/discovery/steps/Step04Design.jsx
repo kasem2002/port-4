@@ -6,6 +6,7 @@ import { SingleUpload } from '../components/FileUpload.jsx';
 import ColorList from '../components/ColorList.jsx';
 import LevelSelector from '../components/LevelSelector.jsx';
 import { useBind, useField, useErrors } from '../useBind.js';
+import { useDT } from '../data/i18n.js';
 import {
   SECTIONS,
   FEATURES,
@@ -26,6 +27,7 @@ export default function Step04Design() {
   const dispatch = useDispatch();
   const { set, toggle } = useBind();
   const errors = useErrors();
+  const t = useDT();
 
   const sections = useField('website.sections') || [];
   const sectionOther = useField('website.sectionOther');
@@ -54,11 +56,7 @@ export default function Step04Design() {
   return (
     <div className="space-y-2">
       {/* ---------- SECTIONS ---------- */}
-      <Question
-        number="Q1"
-        label="Which sections would you like?"
-        description="Pick everything relevant — we'll refine this together."
-      >
+      <Question number="Q1" label={t('s3.q1.label')} description={t('s3.q1.desc')}>
         <CheckboxGroup
           options={SECTIONS}
           value={sections}
@@ -69,16 +67,12 @@ export default function Step04Design() {
           <TextInput
             value={sectionOther}
             onChange={(v) => set('website.sectionOther', v)}
-            placeholder="Any other section you'd like"
+            placeholder={t('s3.q1.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
 
-      <Question
-        number="Q2"
-        label="Which features do you need?"
-        description="Everything from a WhatsApp button to a full admin dashboard."
-      >
+      <Question number="Q2" label={t('s3.q2.label')} description={t('s3.q2.desc')}>
         <CheckboxGroup
           options={FEATURES}
           value={features}
@@ -89,17 +83,12 @@ export default function Step04Design() {
           <TextInput
             value={featureOther}
             onChange={(v) => set('website.featureOther', v)}
-            placeholder="Any other feature you have in mind"
+            placeholder={t('s3.q2.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
 
-      <Question
-        number="Q3"
-        label="Which languages should the website support?"
-        required
-        error={errors['website.languages']}
-      >
+      <Question number="Q3" label={t('s3.q3.label')} required error={errors['website.languages']}>
         <CheckboxGroup
           options={LANGUAGES}
           value={languages}
@@ -109,13 +98,13 @@ export default function Step04Design() {
           <TextInput
             value={languageOther}
             onChange={(v) => set('website.languageOther', v)}
-            placeholder="Which other language?"
+            placeholder={t('s3.q3.otherPlaceholder')}
           />
         </ConditionalReveal>
         <ConditionalReveal show={languages.includes('Arabic')}>
           <div>
             <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-600 mb-2">
-              Should Arabic use a right-to-left layout?
+              {t('s3.q3.rtl')}
             </p>
             <RadioGroup
               options={YES_NO}
@@ -132,14 +121,14 @@ export default function Step04Design() {
       {/* ---------- BRAND ---------- */}
       <div className="pt-8">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-brand-orange mb-2">
-          Brand
+          {t('group.brand')}
         </p>
         <h3 className="font-display text-[1.75rem] tracking-tighter2 text-ink-950">
-          Your visual identity
+          {t('group.brand.title')}
         </h3>
       </div>
 
-      <Question number="Q4" label="Do you already have a logo?" optional>
+      <Question number="Q4" label={t('s3.q4.label')} optional>
         <RadioGroup
           options={YES_NO}
           value={hasLogo}
@@ -149,13 +138,13 @@ export default function Step04Design() {
           <SingleUpload
             value={logo}
             onChange={(v) => set('brand.logo', v)}
-            label="Upload your logo (PNG or SVG preferred)"
+            label={t('s3.q4.upload')}
             accept="image/*,.svg"
           />
         </ConditionalReveal>
       </Question>
 
-      <Question number="Q5" label="Do you have brand colors?" optional>
+      <Question number="Q5" label={t('s3.q5.label')} optional>
         <RadioGroup
           options={YES_NO_UNSURE}
           value={hasColors}
@@ -166,12 +155,7 @@ export default function Step04Design() {
         </ConditionalReveal>
       </Question>
 
-      <Question
-        number="Q6"
-        label="Choose your preferred visual style"
-        description="Pick up to five. These become the direction we work from."
-        optional
-      >
+      <Question number="Q6" label={t('s3.q6.label')} description={t('s3.q6.desc')} optional>
         <CheckboxGroup
           options={VISUAL_STYLES}
           value={visualStyle}
@@ -182,11 +166,7 @@ export default function Step04Design() {
         />
       </Question>
 
-      <Question
-        number="Q7"
-        label="What should visitors feel when they enter your website?"
-        optional
-      >
+      <Question number="Q7" label={t('s3.q7.label')} optional>
         <CheckboxGroup
           options={FEELINGS}
           value={desiredFeeling}
@@ -198,7 +178,7 @@ export default function Step04Design() {
           <TextInput
             value={feelingOther}
             onChange={(v) => set('brand.feelingOther', v)}
-            placeholder="Describe the other feeling"
+            placeholder={t('s3.q7.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
@@ -206,17 +186,17 @@ export default function Step04Design() {
       {/* ---------- MOTION & 3D ---------- */}
       <div className="pt-8">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-brand-orange mb-2">
-          Motion &amp; Interaction
+          {t('group.motion')}
         </p>
         <h3 className="font-display text-[1.75rem] tracking-tighter2 text-ink-950">
-          How much personality should the site have?
+          {t('group.motion.title')}
         </h3>
       </div>
 
       <Question
         number="Q8"
-        label="How much animation do you want?"
-        description="From perfectly still to fully interactive — slide to pick a level."
+        label={t('s3.q8.label')}
+        description={t('s3.q8.desc')}
         optional
       >
         <LevelSelector
@@ -226,7 +206,7 @@ export default function Step04Design() {
         />
       </Question>
 
-      <Question number="Q9" label="How important is 3D?" optional>
+      <Question number="Q9" label={t('s3.q9.label')} optional>
         <RadioGroup
           options={THREE_D_LEVELS}
           value={threeDLevel}
@@ -235,7 +215,7 @@ export default function Step04Design() {
         />
       </Question>
 
-      <Question number="Q10" label="Which interactions do you like?" optional>
+      <Question number="Q10" label={t('s3.q10.label')} optional>
         <CheckboxGroup
           options={INTERACTIONS}
           value={interactions}
@@ -246,15 +226,15 @@ export default function Step04Design() {
           <TextInput
             value={interactionOther}
             onChange={(v) => set('design.interactionOther', v)}
-            placeholder="Describe the other interaction"
+            placeholder={t('s3.q10.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
 
       <Question
         number="Q11"
-        label="What should the site NOT feel like?"
-        description="Just as useful — tell us what to avoid."
+        label={t('s3.q11.label')}
+        description={t('s3.q11.desc')}
         optional
       >
         <CheckboxGroup
@@ -268,19 +248,17 @@ export default function Step04Design() {
           <TextInput
             value={avoidOther}
             onChange={(v) => set('design.avoidOther', v)}
-            placeholder="Anything else to avoid"
+            placeholder={t('s3.q11.otherPlaceholder')}
           />
         </ConditionalReveal>
       </Question>
 
       <Question
         number="Q12"
-        label="Websites you like"
-        description="Paste a few URLs. They help us understand your visual preferences faster than any description."
+        label={t('s3.q12.label')}
+        description={t('s3.q12.desc')}
         optional
-        error={references
-          .map((_, i) => errors[`design.references.${i}`])
-          .find(Boolean)}
+        error={references.map((_, i) => errors[`design.references.${i}`]).find(Boolean)}
       >
         <div className="space-y-2.5">
           {references.map((ref, i) => (
@@ -288,7 +266,7 @@ export default function Step04Design() {
               <TextInput
                 value={ref}
                 onChange={(v) => dispatch(updateReference({ index: i, value: v }))}
-                placeholder="https://example.com"
+                placeholder={t('s3.q12.placeholder')}
               />
               {references.length > 1 && (
                 <button
@@ -308,7 +286,7 @@ export default function Step04Design() {
           onClick={() => dispatch(addReference())}
           className="mt-3 inline-flex items-center gap-2 rounded-full border border-ink-900/15 px-3.5 py-2 text-[12.5px] font-medium text-ink-900 hover:border-brand-orange hover:text-brand-orange transition-colors"
         >
-          <span className="text-[14px]">+</span> Add another URL
+          <span className="text-[14px]">+</span> {t('s3.q12.add')}
         </button>
       </Question>
     </div>

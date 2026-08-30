@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
+import { useOL, useDT } from '../data/i18n.js';
 
-// Single-choice option card. Renders as a large tappable pill.
+// Options are still stored as English key strings in Redux, but rendered
+// through the option-label map so both languages get the right display text.
 export function RadioGroup({ options, value, onChange, columns = 'auto', dense = false }) {
+  const ol = useOL();
   const gridClass =
     columns === 2
       ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5'
@@ -11,14 +14,14 @@ export function RadioGroup({ options, value, onChange, columns = 'auto', dense =
   return (
     <div className={gridClass}>
       {options.map((opt) => {
-        const label = typeof opt === 'string' ? opt : opt.label;
-        const val = typeof opt === 'string' ? opt : opt.value ?? opt.label;
-        const selected = value === val;
+        const key = typeof opt === 'string' ? opt : opt.value ?? opt.label;
+        const label = typeof opt === 'object' && opt.label ? opt.label : ol(key);
+        const selected = value === key;
         return (
           <button
             type="button"
-            key={val}
-            onClick={() => onChange(val)}
+            key={key}
+            onClick={() => onChange(key)}
             className={`group relative flex items-center gap-3 rounded-xl border ${
               dense ? 'px-3.5 py-2.5' : 'px-4 py-3'
             } text-start text-[14.5px] transition-all duration-200 ${
@@ -48,7 +51,6 @@ export function RadioGroup({ options, value, onChange, columns = 'auto', dense =
   );
 }
 
-// Multi-choice group. Same visual language, checkbox indicator.
 export function CheckboxGroup({
   options,
   value = [],
@@ -57,6 +59,8 @@ export function CheckboxGroup({
   max,
   dense = false,
 }) {
+  const ol = useOL();
+  const t = useDT();
   const gridClass =
     columns === 2
       ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5'
@@ -67,16 +71,16 @@ export function CheckboxGroup({
     <div>
       <div className={gridClass}>
         {options.map((opt) => {
-          const label = typeof opt === 'string' ? opt : opt.label;
-          const val = typeof opt === 'string' ? opt : opt.value ?? opt.label;
-          const selected = value.includes(val);
+          const key = typeof opt === 'string' ? opt : opt.value ?? opt.label;
+          const label = typeof opt === 'object' && opt.label ? opt.label : ol(key);
+          const selected = value.includes(key);
           const atMax = max && !selected && value.length >= max;
           return (
             <button
               type="button"
-              key={val}
+              key={key}
               disabled={atMax}
-              onClick={() => onToggle(val)}
+              onClick={() => onToggle(key)}
               className={`group relative flex items-center gap-3 rounded-xl border ${
                 dense ? 'px-3.5 py-2.5' : 'px-4 py-3'
               } text-start text-[14.5px] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed ${
@@ -103,7 +107,7 @@ export function CheckboxGroup({
       </div>
       {max && (
         <p className="mt-2.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-500">
-          {value.length}/{max} selected
+          {t('checkbox.selected', { n: value.length, max })}
         </p>
       )}
     </div>

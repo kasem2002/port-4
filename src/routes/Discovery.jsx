@@ -18,51 +18,41 @@ import {
   markStepTouched,
   setErrors,
 } from '../discovery/store/discoverySlice.js';
-import { validateStep } from '../discovery/data/validation.js';
+import { buildErrors } from '../discovery/data/validation.js';
+import { useDT } from '../discovery/data/i18n.js';
 
 const STEP_COMPONENTS = [Step01Business, Step02Goals, Step03Services, Step04Design, Step05Final];
-
-const stepMeta = [
-  { title: 'Tell us about your business', subtitle: 'Help us understand what you do and what makes your business unique.' },
-  { title: "Let's understand your goals", subtitle: 'What should your website achieve for your business?' },
-  { title: 'What do you offer?', subtitle: 'Tell us what visitors should be able to discover or do on your website.' },
-  { title: "Let's design the experience", subtitle: 'This helps us create a website that feels like your brand.' },
-  { title: 'Almost there', subtitle: 'Give us the final details we need to build the right experience.' },
-];
 
 export default function Discovery() {
   const dispatch = useDispatch();
   const step = useSelector((s) => s.discovery?.step ?? 0);
   const furthest = useSelector((s) => s.discovery?.furthestStep ?? 0);
   const form = useSelector((s) => s.discovery?.form);
-  if (!form) return null; // during HMR, wait for discovery reducer to register
+  const t = useDT();
 
-  // Scroll to top when step changes.
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [step]);
+
+  if (!form) return null;
 
   const currentIsReview = step === 5;
   const currentIsSuccess = step === 6;
 
   const handleNext = () => {
-    if (currentIsReview) return;
-    if (step >= 0 && step <= 4) {
-      const errors = validateStep(step, form);
-      dispatch(markStepTouched(step));
-      if (Object.keys(errors).length > 0) {
-        dispatch(setErrors(errors));
-        // Scroll to first error field (soft try).
-        setTimeout(() => {
-          const first = document.querySelector('[data-error="true"]');
-          if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 50);
-        return;
-      }
-      dispatch(setErrors({}));
-      if (step === 4) dispatch(setStep(5)); // move to review
-      else dispatch(setStep(step + 1));
+    if (currentIsReview || currentIsSuccess) return;
+    const errors = buildErrors(step, form, t);
+    dispatch(markStepTouched(step));
+    if (Object.keys(errors).length > 0) {
+      dispatch(setErrors(errors));
+      setTimeout(() => {
+        const first = document.querySelector('[data-error="true"]');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+      return;
     }
+    dispatch(setErrors({}));
+    dispatch(setStep(step === 4 ? 5 : step + 1));
   };
 
   const handleBack = () => {
@@ -72,9 +62,15 @@ export default function Discovery() {
 
   const CurrentStep = step < 5 ? STEP_COMPONENTS[step] : null;
 
+  // Split-title helper: renders "a" then italic orange "b" from step keys.
+  const titleKey = currentIsReview ? 'review' : String(step);
+  const titleA = t(`step.title.${titleKey}.a`);
+  const titleB = t(`step.title.${titleKey}.b`);
+  const subtitleKey = currentIsReview ? 'review' : String(step);
+  const subtitle = t(`step.subtitle.${subtitleKey}`);
+
   return (
     <div className="relative min-h-screen bg-paper-100/60 text-ink-900 antialiased overflow-x-hidden">
-      {/* Background gridlines echo the site's language */}
       <div
         aria-hidden
         className="fixed inset-0 opacity-[0.05] pointer-events-none"
@@ -85,7 +81,7 @@ export default function Discovery() {
         }}
       />
 
-      {/* Header — echoes the main navbar chrome */}
+      {/* Header */}
       <header className="relative border-b border-ink-900/8 bg-paper-50/70 backdrop-blur-md">
         <div className="max-w-[1160px] mx-auto px-4 md:px-8 py-4 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2">
@@ -94,10 +90,10 @@ export default function Discovery() {
           <div className="hidden md:flex items-center gap-3">
             <span className="chip">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-              Client Discovery
+              {t('chrome.discovery')}
             </span>
             <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500 hidden lg:inline">
-              secure · saved as you type
+              {t('chrome.secureNote')}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -107,38 +103,24 @@ export default function Discovery() {
       </header>
 
       <main className="relative max-w-[1160px] mx-auto px-4 md:px-8 pt-8 md:pt-12 pb-24">
-        {/* Intro */}
         {!currentIsSuccess && (
           <div className="mb-8 md:mb-12">
             <div className="flex items-center gap-2 mb-4">
               <span className="eyebrow-dot" />
               <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-700">
-                Project Brief · PORT-4
+                {t('chrome.brand')}
               </span>
             </div>
             <h1 className="display-2">
-              {currentIsReview ? (
-                <>
-                  Review your <span className="italic font-normal text-brand-orange">brief</span>
-                </>
-              ) : (
-                <>
-                  {stepMeta[step].title.split(' ').slice(0, -1).join(' ')}{' '}
-                  <span className="italic font-normal text-brand-orange">
-                    {stepMeta[step].title.split(' ').slice(-1)[0]}
-                  </span>
-                </>
-              )}
+              {titleA}{' '}
+              <span className="italic font-normal text-brand-orange">{titleB}</span>
             </h1>
             <p className="mt-5 max-w-2xl text-[16px] leading-relaxed text-ink-600">
-              {currentIsReview
-                ? "Take a moment to look everything over. You can edit any section — nothing is submitted yet."
-                : stepMeta[step].subtitle}
+              {subtitle}
             </p>
           </div>
         )}
 
-        {/* Progress */}
         {!currentIsSuccess && (
           <div className="mb-8 md:mb-10">
             <ProgressBar
@@ -149,7 +131,6 @@ export default function Discovery() {
           </div>
         )}
 
-        {/* Step body */}
         <div className="rounded-3xl border border-ink-900/10 bg-paper-50 shadow-panel">
           <div className="p-4 md:p-8">
             <motion.div
@@ -167,7 +148,6 @@ export default function Discovery() {
               )}
             </motion.div>
 
-            {/* Navigation only for the 5 authoring steps; review screen owns its own submit */}
             {!currentIsSuccess && !currentIsReview && (
               <StepNavigation
                 step={Math.min(step, 4)}
@@ -175,8 +155,7 @@ export default function Discovery() {
                 onBack={handleBack}
                 onNext={handleNext}
                 hideBack={step === 0}
-                backLabel="Back"
-                nextLabel={step === 4 ? 'Review brief' : 'Continue'}
+                nextLabel={step === 4 ? t('nav.review') : t('nav.continue')}
               />
             )}
             {currentIsReview && (
@@ -189,17 +168,16 @@ export default function Discovery() {
                   <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 rtl:-scale-x-100" fill="none" stroke="currentColor" strokeWidth="1.6">
                     <path d="M13 8H3M7 4L3 8l4 4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  Back to editing
+                  {t('nav.backToEditing')}
                 </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Bottom rail — mirrors the site footer voice */}
         {!currentIsSuccess && (
           <p className="mt-6 text-center font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
-            PORT-4 · Client Discovery · v.01
+            {t('chrome.rail')}
           </p>
         )}
       </main>
