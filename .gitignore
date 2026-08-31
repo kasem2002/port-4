@@ -11,12 +11,12 @@ build
 # Vite cache
 .vite
 
-# Local env
+# Local env — ignore every .env variant, including backups and copies,
+# then re-include the committed template.
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+*.env.bak
 
 # Logs
 npm-debug.log*
