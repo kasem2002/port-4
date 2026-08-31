@@ -7,7 +7,9 @@ import {
   useUpdateSubmissionMutation,
 } from "@/services/api";
 import type { SubmissionStatus, SubmissionSummary } from "@/types";
+import CopyButton from "../CopyButton";
 import { Panel, inputBase } from "../fields";
+import { briefToJson } from "./exportBrief";
 import SubmissionDetail from "./SubmissionDetail";
 
 const STATUSES: { value: SubmissionStatus | ""; label: string }[] = [
@@ -217,19 +219,26 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
 
           <div className="flex shrink-0 items-center gap-2">
             {submission && (
-              <select
-                value={submission.status}
-                onChange={(e) =>
-                  void updateSubmission({ id: submission.id, status: e.target.value })
-                }
-                className="rounded-full border border-ink-900/10 bg-paper-50 px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-700 outline-none focus:border-brand-orange"
-              >
-                {STATUSES.filter((s) => s.value).map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <>
+                <CopyButton
+                  getText={() => briefToJson(submission)}
+                  label="Copy JSON"
+                  title="Copy the whole brief as JSON, ready to paste into the generator"
+                />
+                <select
+                  value={submission.status}
+                  onChange={(e) =>
+                    void updateSubmission({ id: submission.id, status: e.target.value })
+                  }
+                  className="rounded-full border border-ink-900/10 bg-paper-50 px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-700 outline-none focus:border-brand-orange"
+                >
+                  {STATUSES.filter((s) => s.value).map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
             <button
               type="button"

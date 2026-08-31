@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { optionLabel } from "@/discovery/data/i18n";
 import type { Lang, Submission, WeekDay } from "@/types";
 import { useAppSelector } from "@/app/hooks";
+import CopyButton from "../CopyButton";
+import { briefToJson } from "./exportBrief";
 
 /**
  * Read-only rendering of a client brief. Stored option values are canonical
@@ -50,6 +52,49 @@ function Row({
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * The machine-readable payload, collapsed by default. Option values stay in
+ * canonical English here so the same keys come out whatever language the
+ * client used.
+ */
+function RawJson({ submission }: { submission: Submission }) {
+  const json = briefToJson(submission);
+
+  return (
+    <details className="group rounded-2xl border border-ink-900/10 bg-paper-50 shadow-soft">
+      <summary className="flex cursor-pointer items-center justify-between gap-4 p-6 [&::-webkit-details-marker]:hidden">
+        <div>
+          <h3 className="font-display text-[1.35rem] tracking-tighter2 text-ink-950">
+            Raw JSON
+          </h3>
+          <p className="mt-1 text-[13px] text-ink-600">
+            The full brief, ready to paste into the generator.
+          </p>
+        </div>
+        <span className="shrink-0 font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-500 transition-colors group-open:text-brand-orange">
+          <span className="group-open:hidden">Show</span>
+          <span className="hidden group-open:inline">Hide</span>
+        </span>
+      </summary>
+
+      <div className="border-t border-ink-900/8 p-6 pt-4">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-500">
+            {(json.length / 1024).toFixed(1)} KB
+          </span>
+          <CopyButton getText={() => json} label="Copy JSON" />
+        </div>
+        <pre
+          dir="ltr"
+          className="max-h-96 overflow-auto rounded-xl border border-ink-900/10 bg-ink-950 p-4 font-mono text-[11.5px] leading-relaxed text-paper-50"
+        >
+          {json}
+        </pre>
+      </div>
+    </details>
   );
 }
 
@@ -273,6 +318,8 @@ export default function SubmissionDetail({ submission }: { submission: Submissio
         <Row label="Must avoid" value={brief.final.mustAvoid} lang={lang} />
         <Row label="Additional notes" value={brief.final.additionalNotes} lang={lang} />
       </Card>
+
+      <RawJson submission={submission} />
 
       {submission.files.length > 0 && (
         <Card title={`Files (${submission.files.length})`}>
