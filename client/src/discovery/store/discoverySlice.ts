@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { DEFAULT_LANG } from "@/store/languageSlice";
 import type {
   BriefAsset,
   BriefProduct,
@@ -48,7 +49,9 @@ const emptyTeamMember = (): BriefTeamMember => ({
 const DAYS: WeekDay[] = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"];
 
 export const emptyBrief = (): ClientBrief => ({
-  locale: "en",
+  // Overwritten from the active language when the form mounts; this only
+  // matters for the instant before that runs.
+  locale: DEFAULT_LANG,
   business: {
     name: "",
     type: "",

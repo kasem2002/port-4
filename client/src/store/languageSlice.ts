@@ -3,11 +3,15 @@ import type { Lang } from "@/types";
 
 const LANG_KEY = "port4:lang";
 
+/** Arabic is the default; English is only used when explicitly chosen. */
+export const DEFAULT_LANG: Lang = "ar";
+
 function readLang(): Lang {
   try {
-    return localStorage.getItem(LANG_KEY) === "ar" ? "ar" : "en";
+    return localStorage.getItem(LANG_KEY) === "en" ? "en" : DEFAULT_LANG;
   } catch {
-    return "en";
+    // Private browsing or blocked storage — fall back to the default.
+    return DEFAULT_LANG;
   }
 }
 

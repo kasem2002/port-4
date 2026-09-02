@@ -1,7 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Apply the saved language before first paint. React sets this too, but
+      // only after hydration — without this the page would flash the default
+      // direction for a returning visitor who chose the other one.
+      (function () {
+        try {
+          var lang = localStorage.getItem("port4:lang") === "en" ? "en" : "ar";
+          var el = document.documentElement;
+          el.lang = lang;
+          el.dir = lang === "ar" ? "rtl" : "ltr";
+        } catch (e) {
+          /* storage blocked — the markup default (Arabic) stands */
+        }
+      })();
+    </script>
     <link rel="icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%23D85A30'/%3E%3Cg fill='%23F7F6F2'%3E%3Ccircle cx='36' cy='12' r='3.5'/%3E%3Ccircle cx='12' cy='36' r='3.5'/%3E%3Ccircle cx='36' cy='36' r='3.5'/%3E%3Cpath d='M14 14.9L33.1 34' stroke='%23F7F6F2' stroke-width='2.2' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="PORT-4 — a multidisciplinary development team building websites, applications, platforms, and digital products." />
